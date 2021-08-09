@@ -14,6 +14,14 @@ ansible all -m ping
 
 this above ping command should return with ping / pong green color.
 
+open 5 putty windows like below
+
+putty window 1 - Ansible machine as an ansible user
+putty window 2 - Ansible machine as an ansible user
+putty window 3 - Ansible machine as an ansible user
+putty window 4 - node1 machine as an root user
+putty window 5 - node2 machine as an root user
+
 *******************************************************************************************************************
 Step 1:  Sample Playbook 1
 Step 2:  Sample Playbook 2

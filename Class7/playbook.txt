@@ -66,8 +66,8 @@ vim httpd.yaml
       enabled: yes
    - name: download the httpd.conf
      get_url:
-      url: http://192.168.243.11/ansible/httpd.conf
-      dest: /etc/httpd/conf/httpd.conf
+      url: https://pepa.holla.cz/wp-content/uploads/2016/12/Ansible.pdf
+      dest: /var/www/html/ansible.pdf
       mode: 0644
 	  
 

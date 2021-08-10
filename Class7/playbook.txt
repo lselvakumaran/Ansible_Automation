@@ -36,15 +36,15 @@ vim httpd.yaml
   tasks:
    - name: install httpd
      yum:
-	  name: httpd
-	  state: latest
-	 notify:
-	  - restart web service
-   handlers:
-    - name: restart web service
-	  service:
-	   name: httpd
-	   state: restarted
+      name: httpd
+      state: latest
+     notify:
+      - restart web service
+  handlers:
+   - name: restart web service
+     service:
+      name: httpd
+      state: restarted
 	   
 
 **************************************************************************************************************************************************

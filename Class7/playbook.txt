@@ -15,84 +15,19 @@ ansible all -m ping
 this above ping command should return with ping / pong green color.
 
 *******************************************************************************************************************
-Step 1 : ansible-doc
-Step 2: .yaml or .yml files
-Step 3 : How to construct playbook
-Step 4:  How to ensure syntax issues in playbook before you execute playbooks
-Step 5:  How to see detailed output while playbook getting executed
-Step 6:  Sample Playbook 1
-Step 7:  Sample Playbook 2
-Step 8:  Sample Playbook 3
-Step 9:  httpd installation playbook and error (privilege_escalation)
-Step 10:  copy paste playbooks from internet - How to avoid intending issues
+...
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+		
+		
 *******************************************************************************************************************
+		
 
-Step 1 : ansible-doc
 
-ansible-doc -l
-
-ansible-doc -l | wc -l
-
-ansible-doc -l | grep package
-
-ansible-doc yum
-
-*******************************************************************************************************************
-Step 2: .yaml or .yml files
-
-YAML Ain't Markup Language
-
-Yet Another Markup Language
-*******************************************************************************************************************
-
-Step 3 : How to construct playbook
-
-*******************************************************************************************************************
-Step 4:  How to ensure syntax issues in playbook before you execute playbooks
-
-ansible-playbook <playbook. yml> --syntax-check
-
-simulation
-
-ansible-playbook <playbook. yml> -C
-*******************************************************************************************************************
-Step 5:  How to see detailed output while playbook getting executed
-
-ansible-playbook <playbook. yml> -vvvv
-
-detailed verbose
-
-*******************************************************************************************************************
-
-Step 6:  Sample Playbook 1
-
-vim httpd.yaml
----
-- name: install httpd
-  hosts: all
-  tasks:
-   - name: install httpd
-     yum:
-      name: httpd
-      state: latest
-
-ansible-playbook httpd.yaml --syntax-check
-ansible-playbook httpd.yaml -C
-ansible-playbook httpd.yaml
-
-*******************************************************************************************************************
-
-Step 7:  Sample Playbook 2
-
-- name: Install a list of packages
-  yum:
-    name:
-      - httpd
-      - unzip
-    state: present
-*******************************************************************************************************************
-
-Step 8:  Sample Playbook 3
+handler playbook
 
 vim httpd.yaml
 ---
@@ -103,63 +38,50 @@ vim httpd.yaml
      yum:
 	  name: httpd
 	  state: latest
-   - name: restart web service
-	 service:
-	  name: httpd
-	  state: restarted
-	  
-*******************************************************************************************************************	  
-Step 9:  httpd installation playbook and error (privilege_escalation)
+	 notify:
+	  - restart web service
+   handlers:
+    - name: restart web service
+	  service:
+	   name: httpd
+	   state: restarted
+	   
 
+**************************************************************************************************************************************************
 ---
-- name: install httpd
-  hosts: all
+- name: httpd install
+  hosts: node1,node2
   tasks:
-   - name: install httpd
+   - name: httpd install
      yum:
       name: httpd
       state: latest
+   - name: httpd service start
+     service:
+      name: httpd
+      state: started
+   - name: enable the service
+     service:
+      name: httpd
+      enabled: yes
+   - name: download the httpd.conf
+     get_url:
+      url: http://192.168.243.11/ansible/httpd.conf
+      dest: /etc/httpd/conf/httpd.conf
+      mode: 0644
+	  
 
- 
- open putty ssh login window 1 from ansible client node1 --> tailf /var/log/messages 
-open putty ssh login window 1 from ansible client node2 --> watch -n 1 yum list httpd
-  
- You will receive the error when you execute the playbook.you must add the privilage_escalation section in ansible.cfg file
- 
- vim ansible.cfg
- 
- [privilege_escalation]
-#become=True
-#become_method=sudo
-#become_user=root
-#become_ask_pass=False
 *******************************************************************************************************************
-become - set to yes to activate privilege escalation.
 
-become_user - set to user with desired privileges — the user you become, NOT the user you login as. 
-Does NOT imply become: yes, to allow it to be set at host level. Default value is root.
 
-become_method - (at play or task level) overrides the default method set in ansible.cfg, set to use any of the Become Plugins.
+tags
 
-become_flags - (at play or task level) permit the use of specific flags for the tasks or role. 
-One common use is to change the user to nobody when the shell is set to nologin. Added in Ansible 2.2.
-*******************************************************************************************************************
-Step 10:  copy paste playbooks from internet - How to avoid intending issues
+ansible-playbook <playbook name>  --list-tags
 
-- name: Install the latest version of Apache
-  yum:
-    name: httpd
-    state: latest
+ansible-playbook <playbook name>   -t 
 
-- name: Install Apache >= 2.4
-  yum:
-    name: httpd>=2.4
-    state: present
+ansible-playbook <playbook name>   --list-tasks
 
-- name: Install a list of packages (suitable replacement for 2.11 loop deprecation warning)
-  yum:
-    name:
-      - nginx
-      - postgresql
-      - postgresql-server
-    state: present
+ansible-playbook <playbook name>   --skip-tags
+
+ansible-playbook <playbook name>  --step

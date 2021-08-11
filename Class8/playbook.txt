@@ -1,15 +1,5 @@
 To start this handson lab,you need following resources.
 
-Handler :
-
-Sometimes you want a task to run only when a change is made on a machine. 
-For example, you may want to restart a service if a task updates the configuration of that service, but not if the configuration is unchanged. Ansible uses handlers to address this use case. Handlers are tasks that only run when notified.
-
-What are the tags in Ansible?
-
-Image result for tags in ansible
-A tag is an attribute that you can set to an Ansible structure (plays, roles, tasks), and then when you run a playbook you can use –tags or –skip-tags to execute a subset of tasks.
-
 *******************************************************************************************************************
 prerequisites
 
@@ -24,19 +14,111 @@ ansible all -m ping
 this above ping command should return with ping / pong green color.
 
 *******************************************************************************************************************
-...
-  handlers:
-    - name: Restart Nginx
-      service:
-        name: nginx
-        state: restarted
-		
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install httpd in production group of servers only and restart service also in production servers only
+
+vim httpd.yaml
+---
+- name: install httpd
+  hosts: prod
+  tasks:
+   - name: install httpd
+     yum:
+      name: httpd
+      state: latest
+   - name: restart web service
+     service:
+      name: httpd
+      state: restarted
 		
 *******************************************************************************************************************
 		
 
 
-handler playbook
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install httpd in production group of servers only and restart service also in production servers only
+
+vim httpd.yaml
+---
+- name: install httpd
+  hosts: dev
+  tasks:
+   - name: install httpd
+     yum:
+      name: httpd
+      state: latest
+   - name: restart web service
+     service:
+      name: httpd
+      state: restarted
+
+**************************************************************************************************************************************************
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install httpd in production,dev group of servers and restart service also in both dev & production servers.
+
+vim httpd.yaml
+---
+- name: install httpd
+  hosts: prod,dev
+  tasks:
+   - name: install httpd
+     yum:
+      name: httpd
+      state: latest
+   - name: restart web service
+     service:
+      name: httpd
+      state: restarted
+	  
+
+*******************************************************************************************************************
+
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install httpd in production group and node2 machine only
+
+vim httpd.yaml
+---
+- name: install httpd
+  hosts: prod,node2
+  tasks:
+   - name: install httpd
+     yum:
+      name: httpd
+      state: latest
+   - name: restart web service
+     service:
+      name: httpd
+      state: restarted
+
+*******************************************************************************************************************
+
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install all the plays into all the servers which are listed out in the inventory file.But only one play (or) task must be executed in prod group only
 
 vim httpd.yaml
 ---
@@ -47,57 +129,34 @@ vim httpd.yaml
      yum:
       name: httpd
       state: latest
-     notify:
-      - restart web service
-  handlers:
+     when: inventory_hostname in groups ['prod']
    - name: restart web service
      service:
       name: httpd
       state: restarted
-	   
+      
+      
+*******************************************************************************************************************
 
-**************************************************************************************************************************************************
+Inventory Grouping
+
+node1 --> Dev Group
+
+node2 --> Prod Group
+
+Install all the plays into all the servers which are listed out in the inventory file.But only one play (or) task must be executed in prod group and dev group only
+
+vim httpd.yaml
 ---
-- name: httpd install
-  hosts: node1,node2
+- name: install httpd
+  hosts: all
   tasks:
-   - name: httpd install
+   - name: install httpd
      yum:
       name: httpd
       state: latest
-   - name: httpd service start
-     service:
-      name: httpd
-      state: started
-   - name: enable the service
-     service:
-      name: httpd
-      enabled: yes
-   - name: download the httpd.conf
-     get_url:
-      url: https://pepa.holla.cz/wp-content/uploads/2016/12/Ansible.pdf
-      dest: /var/www/html/ansible.pdf
-      mode: 0644
-     notify:
-      - restart httpd
-  handlers:
-   - name: restart httpd
+     when: inventory_hostname in groups ['prod'] and inventory_hostname in groups ['dev']
+   - name: restart web service
      service:
       name: httpd
       state: restarted
-	  
-
-*******************************************************************************************************************
-
-
-tags
-
-ansible-playbook <playbook name>  --list-tags
-
-ansible-playbook <playbook name>   --tags 
-
-ansible-playbook <playbook name>   --list-tasks
-
-ansible-playbook <playbook name>   --skip-tags
-
-ansible-playbook <playbook name>  --step

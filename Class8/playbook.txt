@@ -155,7 +155,7 @@ vim httpd.yaml
      yum:
       name: httpd
       state: latest
-     when: inventory_hostname in groups ['prod'] and inventory_hostname in groups ['dev']
+     when: inventory_hostname in groups ['prod']
    - name: restart web service
      service:
       name: httpd

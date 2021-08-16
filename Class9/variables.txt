@@ -32,6 +32,8 @@ Eg:
 
 Declared local variable
 
+vim httpd.yaml
+
 ---
 - name: installing packages
   hosts: all
@@ -40,12 +42,15 @@ Declared local variable
   tasks:
    - name: install {{ websoft }}
      yum:
-      name: "{{ websoft }}"	
-	  state: latest
+      name: "{{ websoft }}"
+      state: latest
    - name: start the {{ websoft }} service
      service:
-	  name: "{{ websoft }}"
-	  state: restarted
+      name: "{{ websoft }}"
+      state: restarted
+
+ansible-playbook httpd.yaml
+
 
 Now execute this playbook and it will be executed without any issues.
 coz it is local variable.
@@ -55,15 +60,17 @@ vim vsftpd.yaml
 ---
 - name: installing packages
   hosts: all
+  vars:
+   - websoft: httpd
   tasks:
    - name: install {{ websoft }}
      yum:
-      name: "{{ websoft }}"	
-	  state: latest
+      name: "{{ websoft }}"
+      state: latest
    - name: start the {{ websoft }} service
      service:
-	  name: "{{ websoft }}"
-	  state: restarted
+      name: "{{ websoft }}"
+      state: restarted
 
 Now it will throw errors.coz websoft variable is declared in different file and it wont work from different file.
 

@@ -47,6 +47,25 @@ Declared local variable
 	  name: "{{ websoft }}"
 	  state: restarted
 
+Now execute this playbook and it will be executed without any issues.
+coz it is local variable.
+
+vim vsftpd.yaml
+
+---
+- name: installing packages
+  hosts: all
+  tasks:
+   - name: install {{ websoft }}
+     yum:
+      name: "{{ websoft }}"	
+	  state: latest
+   - name: start the {{ websoft }} service
+     service:
+	  name: "{{ websoft }}"
+	  state: restarted
+
+Now it will throw errors.coz websoft variable is declared in different file and it wont work from different file.
 
 ***********************************************************************************************************************************************
  
@@ -84,8 +103,6 @@ vim httpd.yaml
 ---
 - name: installing packages
   hosts: all
-  vars:
-   - websoft: httpd
   tasks:
    - name: install {{ websoft }}
      yum:
@@ -127,3 +144,5 @@ ansible-playbook httpd.yaml
 
 
 you see prod machines will fail
+
+This prove that global variable can be accessiable from any playbook.

@@ -165,15 +165,15 @@ ansible all -a "df -h"
 
 ansible ad hoc command to Install a package using yum command
 
-ansible all -s -m yum -a "name=httpd state=installed"
+ansible all -m yum -a "name=httpd state=installed"
 **************************************************************************************************************************
 
 ansible ad hoc command to Start or stop the service
 
 # To Start
-ansible multi -s -m service -a "name=httod state=started enabled=yes"
+ansible multi -m service -a "name=httod state=started enabled=yes"
 # To Stop
-ansible multi -s -m service -a "name=httpd state=stop enabled=yes"
+ansible multi -m service -a "name=httpd state=stop enabled=yes"
 
 
 **************************************************************************************************************************
@@ -201,7 +201,7 @@ To know more about Ansible async and poll refer this article
 
 Rebooting the host in the background is the best example for fire and forget or async and poll.
 
-ansible all -i inventory -b -B 1 -P 0 -m shell -a "sleep 5 && reboot"
+ansible all -b -B 1 -P 0 -m shell -a "sleep 5 && reboot"
 **************************************************************************************************************************
 
 ansible ad hoc command to check service status

@@ -135,7 +135,7 @@ ansible all -m shell -a "cat /proc/meminfo|head -2"
 
 ad hoc command to Create a unix user group
 
-ansible all -s -m group -a "name=weblogic state=present" 
+ansible all -m group -a "name=weblogic state=present" 
 **************************************************************************************************************************
 
 ad hoc command to Create a unix user

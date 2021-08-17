@@ -105,12 +105,6 @@ $ ansible webservers -m service -a "name=httpd state=stopped"
 
 **************************************************************************************************************************
 
-Just validate the uptime of 1 to 200 remote servers
-Just get the disk space of remote hosts
-Ping and validate if the server is alive and responds
-shutdown multiple remote hosts at a single command
-
-**************************************************************************************************************************
 ansible ad hoc ping command example
 
 ansible all -m ping -i ansible_hosts
@@ -128,6 +122,7 @@ In this example, we are going to know the uptime of the hosts. Ansible provides 
 Which one to pick is not a big confusion if you know what are they and their capabilities
 
 FAQ: Ansible command vs shell module
+
 Here are the commands you can use to get the uptime. All three commands would yield you the same results.
 
 ansible all -m command -a uptime 

@@ -40,7 +40,7 @@ ansible webservers -m file -a "dest=/var/tmp/testing mode=755 owner=mdehaan grou
 
 As well as delete directories (recursively) and delete files:
 
-$ ansible webservers -m file -a "dest=/var/tmp/testing state=absent"
+ansible webservers -m file -a "dest=/var/tmp/testing state=absent"
 
 ***************************************************************************************************************************************
 
@@ -50,19 +50,19 @@ There are modules available for yum and apt. Here are some examples with yum.
 
 Ensure a package is installed, but don’t update it:
 
-$ ansible webservers -m yum -a "name=acme state=present"
+ansible webservers -m yum -a "name=acme state=present"
 
 Ensure a package is installed to a specific version:
 
-$ ansible webservers -m yum -a "name=httpd_2.4.6-97 state=present"
+ansible webservers -m yum -a "name=httpd-2.4.6-9* state=present"
 
 Ensure a package is at the latest version:
 
-$ ansible webservers -m yum -a "name=acme state=latest"
+ansible webservers -m yum -a "name=httpd state=latest"
 
 Ensure a package is not installed:
 
-$ ansible webservers -m yum -a "name=acme state=absent"
+ansible webservers -m yum -a "name=httpd state=absent"
 
 Ansible has modules for managing packages under many platforms. If there isn’t a module for your package manager, you can install packages using the command module or (better!) contribute a module for your package manager. Stop by the mailing list for info/details.
 
@@ -72,9 +72,9 @@ Users and Groups
 
 The ‘user’ module allows easy creation and manipulation of existing user accounts, as well as removal of user accounts that may exist:
 
-$ ansible all -m user -a "name=foo password=<crypted password here>"
+ansible all -m user -a "name=foo password=KEnTeaStIFY"
 
-$ ansible all -m user -a "name=foo state=absent"
+ansible all -m user -a "name=foo state=absent"
 
 ***************************************************************************************************************************************
 
@@ -82,26 +82,26 @@ Managing Services
 
 Ensure a service is started on all webservers:
 
-$ ansible webservers -m service -a "name=httpd state=started"
+ansible webservers -m service -a "name=httpd state=started"
 
 Alternatively, restart a service on all webservers:
 
-$ ansible webservers -m service -a "name=httpd state=restarted"
+ansible webservers -m service -a "name=httpd state=restarted"
 
 Ensure a service is stopped:
 
-$ ansible webservers -m service -a "name=httpd state=stopped"
+ansible webservers -m service -a "name=httpd state=stopped"
 
 
 **************************************************************************************************************************
 
 ansible ad hoc ping command example
 
-ansible all -m ping -i ansible_hosts
+ansible all -m ping 
 **************************************************************************************************************************
 What if you do not have SSH key-based authentication, then enter the user name and password while invoking the command as shown below.
 
-ansible multi -m ping -i ansible_hosts --user=vagrant --ask-pass
+ansible multi -m ping  --user=vagrant --ask-pass
 
 **************************************************************************************************************************
 ansible ad hoc command to check uptime
@@ -178,44 +178,18 @@ ansible multi -s -m service -a "name=httpd state=stop enabled=yes"
 
 **************************************************************************************************************************
 
-Install and configure python Django application server with ansible ad hoc
-
-These are set of commands you have to execute to install the Django application server and Mysql libraries. Here we are using easy_install which is an ansible module it helps to find the easy installation option from ansible galaxy
-
-$ ansible app -s -m yum -a "name=MySQL-python state=present"
-$ ansible app -s -m yum -a "name=python-setuptools state=present"
-$ ansible app -s -m easy_install -a "name=django"
-
-
-**************************************************************************************************************************
-
 Managing Cron Job and Scheduling with Ansible ad hoc
 
 #  Run the job every 15 minutes
-$ ansible all -s -m cron -a "name='daily-cron-all-servers' minute=*/15 job='/path/to/minute-script.sh'"
+$ ansible all -m cron -a "name='daily-cron-all-servers' minute=*/15 job='/path/to/minute-script.sh'"
 # Run the job every four hours
-$ ansible all -s -m cron -a "name='daily-cron-all-servers' hour=4 job='/path/to/hour-script.sh'"
+$ ansible all -m cron -a "name='daily-cron-all-servers' hour=4 job='/path/to/hour-script.sh'"
 # Enabling a Job to run at system reboot
-$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=reboot job='/path/to/startup-script.sh'"
+$ ansible all -m cron -a "name='daily-cron-all-servers' special_time=reboot job='/path/to/startup-script.sh'"
 # Scheduling a Daily job
-$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=daily job='/path/to/daily-script.sh'"
+$ ansible all -m cron -a "name='daily-cron-all-servers' special_time=daily job='/path/to/daily-script.sh'"
 # Scheduling a Weekly job
-$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=weekly job='/path/to/daily-script.sh'"
-
-**************************************************************************************************************************
-
-Running operations in the background asynchronous with Polling ansible
-
-You can use AD-HOC commands to run the operations background using -B and poll the job in the frequent interval -P
-
-ansible ad-hoc command  to perform yum update and frequently poll and check the status of the job
-
-$ ansible multi -s -B 3600 -a "yum -y update" 
-$ ansible multi -m async_status -a "jid=763350539037"
-
-By Default the polling interval is 10 seconds, but can modify it using -P option
-
-If you set -P as 0 it called as fire and forget, The job id would not be given and you cannot track the job using async_status as shown above.
+$ ansible all -m cron -a "name='daily-cron-all-servers' special_time=weekly job='/path/to/daily-script.sh'"
 
 **************************************************************************************************************************
 
@@ -234,7 +208,7 @@ ansible ad hoc command to check service status
 
 In this example, we are going to see how to check the status of service using ansible ad hoc command
 
-ansible all -m service -a "name=httpd"
+ansible all -m shell -a "service httpd status"
 **************************************************************************************************************************
 
 ansible ad hoc command to copy file local to remote
@@ -263,7 +237,8 @@ ansible all -m shell -a 'df -h -T|grep -i nfs'  -i ansible_hosts
 
 adhoc command to collect memory, cpu and OS distribution of a host
 
-ansible all -m setup -a 'filter=ansible_distribution,ansible_distribution_version,ansible_memfree_mb,ansible_memtotal_mb,ansible_processor_cores*,ansible_architecture' 2>/dev/null
+ansible node2 -m setup -a "filter=ansible_distribution*"
+
 **************************************************************************************************************************
 
 ansible ad hoc command to stop, start, restart, reload service
@@ -277,7 +252,7 @@ ansible all -m shell -a "service nginx restart" -b
 
 You can also use Ansible’s built in systemd module otherwise like this.
 
-$ ansible all  -m systemd -a "name=nginx state=reloaded"
+ansible all  -m systemd -a "name=nginx state=reloaded"
 
 **************************************************************************************************************************
 
@@ -287,7 +262,7 @@ To download a file from URL in ansible ad hoc. You can either invoke linux comma
 
 This is how you can use get_url module in Ansible ad hoc to download a file in remote system
 
-$ ansible all -m get_url -a "url=https://nodejs.org/dist/v14.17.4/node-v14.17.4-linux-x64.tar.xz dest=/tmp mode=0755"
+ansible all -m get_url -a "url=https://nodejs.org/dist/v14.17.4/node-v14.17.4-linux-x64.tar.xz dest=/tmp mode=0755"
 
 
 **************************************************************************************************************************

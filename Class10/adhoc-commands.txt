@@ -109,3 +109,204 @@ Just validate the uptime of 1 to 200 remote servers
 Just get the disk space of remote hosts
 Ping and validate if the server is alive and responds
 shutdown multiple remote hosts at a single command
+
+**************************************************************************************************************************
+ansible ad hoc ping command example
+
+ansible all -m ping -i ansible_hosts
+**************************************************************************************************************************
+What if you do not have SSH key-based authentication, then enter the user name and password while invoking the command as shown below.
+
+ansible multi -m ping -i ansible_hosts --user=vagrant --ask-pass
+
+**************************************************************************************************************************
+ansible ad hoc command to check uptime
+
+ansible ad hoc command to check uptime
+In this example, we are going to know the uptime of the hosts. Ansible provides two major modules to run the command over the host group or on the remote server.
+
+Which one to pick is not a big confusion if you know what are they and their capabilities
+
+FAQ: Ansible command vs shell module
+Here are the commands you can use to get the uptime. All three commands would yield you the same results.
+
+ansible all -m command -a uptime 
+ansible all -m shell -a uptime 
+ansible all -a uptime
+**************************************************************************************************************************
+
+ansible ad hoc command to check memory usage
+
+ansible all -a "free -m"
+
+**************************************************************************************************************************
+
+ansible ad hoc command to get physical memory allocated to the host
+
+ansible all -m shell -a "cat /proc/meminfo|head -2"
+
+
+**************************************************************************************************************************
+
+ad hoc command to Create a unix user group
+
+ansible all -s -m group -a "name=weblogic state=present" 
+**************************************************************************************************************************
+
+ad hoc command to Create a unix user
+
+ansible all -m user -a "name=weblogic group=weblogic createhome=yes" -b
+**************************************************************************************************************************
+
+ansible ad hoc command to Create a Directory with 755 permission 
+
+ansible all -m file -a "path=/opt/oracle state=directory mode=0755" -b
+**************************************************************************************************************************
+
+ansible ad hoc command to Create a file with 755 permission
+
+ansible all -m file -a "path=/tmp/testfile state=touch mode=0755"
+**************************************************************************************************************************
+
+ad hoc command to Change ownership of a file
+
+ansible all -m file -a "path=/opt/oracle group=weblogic owner=weblogic" -i ansible_hosts -b
+**************************************************************************************************************************
+
+ansible ad hoc command to  check free disk space of hosts
+
+ansible all -a "df -h"
+**************************************************************************************************************************
+
+ansible ad hoc command to Install a package using yum command
+
+ansible all -s -m yum -a "name=httpd state=installed"
+**************************************************************************************************************************
+
+ansible ad hoc command to Start or stop the service
+
+# To Start
+ansible multi -s -m service -a "name=httod state=started enabled=yes"
+# To Stop
+ansible multi -s -m service -a "name=httpd state=stop enabled=yes"
+
+
+**************************************************************************************************************************
+
+Install and configure python Django application server with ansible ad hoc
+
+These are set of commands you have to execute to install the Django application server and Mysql libraries. Here we are using easy_install which is an ansible module it helps to find the easy installation option from ansible galaxy
+
+$ ansible app -s -m yum -a "name=MySQL-python state=present"
+$ ansible app -s -m yum -a "name=python-setuptools state=present"
+$ ansible app -s -m easy_install -a "name=django"
+
+
+**************************************************************************************************************************
+
+Managing Cron Job and Scheduling with Ansible ad hoc
+
+#  Run the job every 15 minutes
+$ ansible all -s -m cron -a "name='daily-cron-all-servers' minute=*/15 job='/path/to/minute-script.sh'"
+# Run the job every four hours
+$ ansible all -s -m cron -a "name='daily-cron-all-servers' hour=4 job='/path/to/hour-script.sh'"
+# Enabling a Job to run at system reboot
+$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=reboot job='/path/to/startup-script.sh'"
+# Scheduling a Daily job
+$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=daily job='/path/to/daily-script.sh'"
+# Scheduling a Weekly job
+$ ansible all -s -m cron -a "name='daily-cron-all-servers' special_time=weekly job='/path/to/daily-script.sh'"
+
+**************************************************************************************************************************
+
+Running operations in the background asynchronous with Polling ansible
+
+You can use AD-HOC commands to run the operations background using -B and poll the job in the frequent interval -P
+
+ansible ad-hoc command  to perform yum update and frequently poll and check the status of the job
+
+$ ansible multi -s -B 3600 -a "yum -y update" 
+$ ansible multi -m async_status -a "jid=763350539037"
+
+By Default the polling interval is 10 seconds, but can modify it using -P option
+
+If you set -P as 0 it called as fire and forget, The job id would not be given and you cannot track the job using async_status as shown above.
+
+**************************************************************************************************************************
+
+ansible ad hoc command to reboot remote system
+
+n this example we are going to reboot the remote system using the shell module and Poll 0, it represents fire and forget
+
+To know more about Ansible async and poll refer this article
+
+Rebooting the host in the background is the best example for fire and forget or async and poll.
+
+ansible all -i inventory -b -B 1 -P 0 -m shell -a "sleep 5 && reboot"
+**************************************************************************************************************************
+
+ansible ad hoc command to check service status
+
+In this example, we are going to see how to check the status of service using ansible ad hoc command
+
+ansible all -m service -a "name=httpd"
+**************************************************************************************************************************
+
+ansible ad hoc command to copy file local to remote
+
+The following ad hoc command with copy module copies the file from Src location on the local control machine to the specified location on the remote server
+
+ansible all -m copy -a "src=~/var/tmp/index.html dest=/var/www/html owner=apache group=apache mode=0644"
+**************************************************************************************************************************
+
+ansible ad hoc command to copy directory local to remote
+
+This is an ansible AD HOC command to copy a directory to the remote server
+
+ansible all -m copy -a "src=/var/tmp/test dest=/var/tmp/test owner=apache group=apache mode=0644 " -i ansible_hosts -b
+
+You need to notice that there is no / at the end of src path. It is just /var/tmp/test
+
+If you put a slash at the end. It would copy only the contents of the directory alone but not the directory.
+**************************************************************************************************************************
+
+ansible ad hoc command to list NFS mounts
+
+ansible all -m shell -a 'df -h -T|grep -i nfs'  -i ansible_hosts
+
+**************************************************************************************************************************
+
+adhoc command to collect memory, cpu and OS distribution of a host
+
+ansible all -m setup -a 'filter=ansible_distribution,ansible_distribution_version,ansible_memfree_mb,ansible_memtotal_mb,ansible_processor_cores*,ansible_architecture' 2>/dev/null
+**************************************************************************************************************************
+
+ansible ad hoc command to stop, start, restart, reload service
+
+Simple way to restart any service with Ansible ad hoc command is to use Shell module with the actual service or systemctl command
+
+
+ansible all -m shell -a "service nginx restart" -b
+
+
+
+You can also use Ansible’s built in systemd module otherwise like this.
+
+$ ansible all  -m systemd -a "name=nginx state=reloaded"
+
+**************************************************************************************************************************
+
+ad hoc command to download file from URL
+
+To download a file from URL in ansible ad hoc. You can either invoke linux commands like CURL or WGET  but the preferred way is to use the get_url module of Ansible.
+
+This is how you can use get_url module in Ansible ad hoc to download a file in remote system
+
+$ ansible all -m get_url -a "url=https://nodejs.org/dist/v14.17.4/node-v14.17.4-linux-x64.tar.xz dest=/tmp mode=0755"
+
+
+**************************************************************************************************************************
+
+ad hoc command to check listening ports
+
+ansible all -m listen_ports_facts

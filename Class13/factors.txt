@@ -1,0 +1,205 @@
+To start this handson lab,you need following resources.
+
+
+*******************************************************************************************************************
+prerequisites
+
+1.	server.cnl.com – 1 CPU – 1GB RAM (Python 2.7) - Ansible Server
+2.	node1.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 1
+3.	node2.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 2
+
+from ansible server login as an ansible user as per class 4.From ansible user execute below command
+
+ansible all -m ping
+
+this above ping command should return with ping / pong green color.
+
+*******************************************************************************************************************
+Ansible Factors
+
+
+ansible all -m setup
+
+
+/etc/ansible/ansible.cfg
+
+
+
+all - gather all subsets
+network - gather min and network facts
+hardware - gather hardware facts (longest facts to retrieve)
+virtual - gather min and virtual facts
+facter - import facts from facter
+ohai - import facts from ohai
+
+
+# You can combine them using comma (ex: network,virtual)
+# You can negate them using ! (ex: !hardware,!facter,!ohai)
+# A minimal set of facts is always gathered.
+#gather_subset = all
+
+
+
+# Display only facts about certain interfaces.
+ansible all -m setup -a 'filter=ansible_eth[0-2]'
+
+# Restrict additional gathered facts to network and virtual (includes default minimum facts)
+ansible all -m setup -a 'gather_subset=network,virtual'
+
+# Collect only network and virtual (excludes default minimum facts)
+ansible all -m setup -a 'gather_subset=!all,!any,network,virtual'
+
+# Do not call puppet facter or ohai even if present.
+ansible all -m setup -a 'gather_subset=!facter,!ohai'
+
+# Only collect the default minimum amount of facts:
+ansible all -m setup -a 'gather_subset=!all'
+
+# Collect no facts, even the default minimum subset of facts:
+ansible all -m setup -a 'gather_subset=!all,!min'
+
+# Display facts and store custom facts
+
+ansible node1 -m setup --tree /tmp/facts
+
+
+[ansible@server dev]$ ansible node1 -m setup
+node1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.182.0.2"
+        ], 
+        "ansible_all_ipv6_addresses": [
+            "fe80::20f2:9cad:e44b:401b"
+        ], 
+        "ansible_apparmor": {
+            "status": "disabled"
+        }, 
+        "ansible_architecture": "x86_64", 
+        "ansible_bios_date": "01/01/2011", 
+        "ansible_bios_version": "Google", 
+
+Ansible Gathered Facts or playbook variables belongs to one of the following types
+
+Dictionary 
+List
+AnsibleUnsafeText
+
+In the above output
+
+"ansible_all_ipv4_addresses" ---> List (or) Array
+"ansible_apparmor" --> Dictionary
+"ansible_architecture": "x86_64" --> AnsibleUnsafeText
+
+
+As you see in the above picture, there are three data types in the return variables (or) gathered_facts. Basically, the Ansible UnSafe Text is the statement which is an end variable or key (python) which holds the value. It can either be part of Dictionary or stand alone.
+
+Here in the preceding example, ansible_architecture and status both belong to Ansible UnSafe Text datatype but they are different as the variable status is part of a dictionary and another one is no
+
+***********************************************************************************
+
+Having three variables for the three data types, Now let us go and write a playbook to access these different type of variables.
+
+The following playbook is designed to display the data type of each variable and then print the value of them. As you could notice, to access the element of the
+
+
+
+---
+- name: Ansible Variable Example Playbook
+  hosts: node1
+  tasks:
+
+
+    # display the variable data type
+    - debug:
+        msg: 
+          - " Data type of 'ansible_architecture'  is {{ ansible_architecture | type_debug }} "
+          - " Data type of 'ansible_apparmor' is {{ ansible_apparmor | type_debug }} "
+          - " Data type of 'ansible_all_ipv4_addresses' is {{ ansible_all_ipv4_addresses | type_debug }} "
+		  - " Data type of 'ansible_devices' is {{ ansible_devices | type_debug }} "
+
+    # Simply printing the value of fact which is Ansible UnSafe Text type
+    - debug:
+        msg: "{{ ansible_architecture }}"
+
+
+    # Accessing an element of dictionary
+    - debug:
+        msg: "{{ansible_apparmor.status}}"
+
+    # Accessing the list
+    - debug:
+        msg: "{{ansible_all_ipv4_addresses}}"
+		
+*******************************************************************************************
+limiting tasks in particular machines
+
+
+---
+- name: Ansible Variable Example Playbook
+  hosts: all
+  tasks:
+
+    # Print the Dictionary
+    - debug:
+        msg: "{{ansible_mounts}}"
+
+    # Parsing through Variable Dictionary
+    - debug:
+        msg: "Mount Point {{item.mount}} is at {{item.block_used/item.block_total*100}} percent "
+      loop: "{{ansible_mounts}}"
+
+    # Execute Host based task using variable
+    - name: Execute the command only node1 server
+      become: yes
+      become_user: root 
+      shell: "uname -a"
+      when: "{{ ansible_hostname == 'node1'}}"
+	  
+*******************************************************************************************************
+Print following informations for the running servers or clients
+
+Server Name
+Howmuch Processors
+What is the server IP Address
+What is the server Mac Address
+
+
+---
+- name: system information
+  hosts: node1,node2
+  tasks:
+   - name: system information
+     copy:
+      content: "{{ ansible_hostname }} \n {{ansible_processor_count}} \n {{ansible_default_ipv4.address}} \n {{ansible_default_ipv4.macaddress}}\n"
+      dest: /var/tmp/sysinfo.html
+      mode: 0644
+*****************************************************************************************************
+Disable Gather Facts
+
+
+---
+- name: system information
+  hosts: node1,node2
+  gather_facts: False
+  tasks:
+   - name: system information
+     copy:
+      content: "{{ ansible_hostname }} \n {{ansible_processor_count}} \n {{ansible_default_ipv4.address}} \n {{ansible_default_ipv4.macaddress}}\n"
+      dest: /var/tmp/sysinfo.html
+      mode: 0644
+	  
+	  
+---
+- hosts: all
+  gather_facts: False
+  tasks:
+    - name: Hello
+      shell: "echo hello"
+      tags:
+         - hello
+
+    - name: Bye
+      shell: "echo bye"
+      tags:
+         - bye

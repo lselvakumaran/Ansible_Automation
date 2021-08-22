@@ -20,6 +20,13 @@ Ansible Factors
 
 ansible all -m setup
 
+1. Think what condition and apply simple linux command
+2. Use command module and end of the play next new line use register: <your own name> to capture the output
+3. We are beginners.so first print it in jason format output.
+4. From that output you decide rquired conditions.in 2 play print success condition message and failure condition message.
+
+*******************************************************************************************************************
+
 
 Check package is there or not
 

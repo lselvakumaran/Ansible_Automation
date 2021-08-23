@@ -33,7 +33,7 @@ Check package is there or not
 rpm -qa httpd
 
 ---
-- name: going to install ex407-server package
+- name: going to check httpd package
   hosts: node1
   tasks:
    - name: check httpd package is there or not

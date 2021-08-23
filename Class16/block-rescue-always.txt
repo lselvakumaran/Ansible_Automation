@@ -1,0 +1,225 @@
+To start this handson lab,you need following resources.
+
+
+*******************************************************************************************************************
+prerequisites
+
+1.	server.cnl.com – 1 CPU – 1GB RAM (Python 2.7) - Ansible Server
+2.	node1.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 1
+3.	node2.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 2
+
+from ansible server login as an ansible user as per class 4.From ansible user execute below command
+
+ansible all -m ping
+
+this above ping command should return with ping / pong green color.
+
+**********************************************************************************************************---
+- name: Ansible Block Example Playbook
+  hosts: node1
+  tasks:
+   - name: Install, configure, and start Apache
+     block:
+       - name: Install httpd and memcached
+         yum:
+           name:
+            - httpd
+            - memcached
+           state: present
+       - name: Start service httpd and enable it
+         service:
+           name: httpd
+           state: started
+           enabled: True
+         when: ansible_facts['distribution'] == 'CentOS'
+
+ansible_distribution == 'Ubuntu'
+*********************************************************************************
+
+
+Block error handling example with rescue
+---
+- name: Ansible Block Example Playbook
+  hosts: node1
+  tasks:
+   - name: Handle the error
+     block:
+      - name: Print a message
+        debug:
+         msg: 'I execute normally'
+
+      - name: Force a failure
+        command: /bin/false
+
+      - name: Never print this
+        debug:
+         msg: 'I never execute, due to the above task failing, :-('
+     rescue:
+      - name: Print when errors
+        debug:
+         msg: 'I caught an error, can do stuff here to fix it, :-)'
+		 
+		 
+
+***********************************************************************************************
+
+Block ,Rescue and Always error handling example
+---
+- name: Ansible Block Example Playbook
+  hosts: node1
+  tasks:
+   - name: Handle the error
+     block:
+      - name: Print a message
+        debug:
+         msg: 'I execute normally'
+
+      - name: Force a failure
+        command: /bin/false
+
+      - name: Never print this
+        debug:
+         msg: 'I never execute, due to the above task failing, :-('
+     rescue:
+      - name: Print when errors
+        debug:
+         msg: 'I caught an error, can do stuff here to fix it, :-)'
+     always:
+      - name: Always do this
+        debug:
+         msg: "This always executes, :-)"
+		 
+*************************************************************************************
+
+
+
+Install vsftpd package
+Take a backup of /etc/vsftpd/vsftpd.conf on the same managed node
+Copy vsftpd.j2 jinja template from controller node to the managed node and replace /etc/vsftpd/vsftpd.conf
+Intentionally fail the block by trying to access incorrect location
+
+Next I will have a rescue block so that if something goes wrong we will perform some clean up/fallback. In this I have two tasks:
+
+Print a message on the console for the recovery
+Restore vsftpd.conf using the backup file vsftpd.conf.bkp on the managed node
+
+Lastly we will have always block will restart the vsftpd service independent of the task execution status
+
+
+---
+ - name: Install vsftpd
+   hosts: server1
+   become: yes
+   vars:
+     anonymous_enable: yes
+     local_enable: yes
+     write_enable: yes
+     anon_upload_enable: yes
+   tasks:
+     - block:
+        - name: install vsftp
+          yum:
+            name: vsftpd
+        - name: take backup of existing config
+          copy:
+            src: /etc/vsftpd/vsftpd.conf
+            dest: /etc/vsftpd/vsftpd.conf.bkp
+            remote_src: yes
+        - name: use Jinja2 template to configure vsftpd
+          template:
+            src: vsftpd.j2
+            dest: /etc/vsftpd/vsftpd.conf
+        - name: This will fail
+          command: "ls -l /tmp/does-not-exist"
+
+       rescue:
+        - name: Recovery block
+          debug:
+            msg: "something failed, restoring vsftpd.conf from backup"
+        - name: Restoring vsftpd.conf
+          copy:
+            src: /etc/vsftpd/vsftpd.conf.bkp
+            dest: /etc/vsftpd/vsftpd.conf
+            remote_src: yes
+
+       always:
+        - name: Restarting vsftpd
+          service:
+            name: vsftpd
+            state: restarted
+
+*********************************************************************************************
+install sysstat in ubuntu and centos
+
+
+---
+- name: install sysstat in ubuntu and centos
+  hosts: all
+  vars:
+    date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+  tasks:
+    - block:
+      - name: verify the sysstat in ubuntu
+        command: dpkg-query -W sysstat
+        register: package
+        when: ansible_distribution == "Ubuntu"
+      - name: print jason output in ubuntu
+        debug: var=package
+      - name: install sysstat if not installed in ubuntu
+        command: apt-get install sysstat
+        when: package.stdout != "sysstat*"
+      - name: copy sysstat file in ubuntu
+        copy:
+         src: /etc/default/sysstat
+         dest: /etc/default/sysstat.{{ date }}
+      - name: replace the word in the file in ubuntu
+        replace:
+         dest: /etc/default/sysstat
+         regexp: "false"
+         replace: "true"
+      - name: configure sysstat file in cron.d in ubuntu
+        copy:
+         src: /etc/cron.d/sysstat
+         dest: /etc/cron.d/sysstat.{{ date }}
+      - name: Add activity every 2 mins everyday in ubuntu
+        lineinfile:
+         path: /etc/cron.d/sysstat
+         line: "*/2 * * * * root command -v debian-sa1 > /dev/null && debian-sa1 1 1"
+         regexp: 'debian-sa1 1 1'
+         backup: yes
+      - name: restart the sysstat service in ubuntu
+        service:  name=sysstat state=restarted
+      rescue:
+      - name: verify the sysstat in centos
+        command: rpm -qa sysstat
+        register: package
+        when: ansible_distribution == "CentOS"
+      - name: print jason output in centos
+        debug: var=package
+      - name: sysstat package is not installed in centos
+        debug: msg="Sysstat package is not installed in this server"
+        when: package.stdout == ""
+      - name: sysstat package has been installed in centos
+        debug: msg="sysstat package has been installed in this server"
+        when: package.stdout != ""
+      - name: install sysstat package in the centos server
+        yum: name=sysstat state=latest
+        when: package.stdout == ""
+      - name: start the sysstat service in centos
+        service: name=sysstat state=started enabled=yes
+        when: package.stdout != ""
+      - name: install python dependencies in centos
+        yum: name=libselinux-python state=latest
+      - name: configure sysstat file in cron.d in centos
+        copy:
+         src: /etc/cron.d/sysstat
+         dest: /etc/cron.d/sysstat.{{ date }}
+		 remote_src: yes
+      - name: Add activity every 2 mins everyday in centos
+        lineinfile:
+         path: /etc/cron.d/sysstat
+         line: "2 * * * * root /usr/lib64/sa/sa1 1 1"
+         regexp: 'sa1 1 1'
+         backup: yes
+      - name: restart the sysstat service in centos
+        service:  name=sysstat state=restarted

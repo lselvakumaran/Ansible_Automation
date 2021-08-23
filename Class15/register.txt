@@ -1,0 +1,82 @@
+To start this handson lab,you need following resources.
+
+
+*******************************************************************************************************************
+prerequisites
+
+1.	server.cnl.com – 1 CPU – 1GB RAM (Python 2.7) - Ansible Server
+2.	node1.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 1
+3.	node2.cnl.com – 1 CPU – 1GB RAM ( python 2.6 and above) - Ansible Client 2
+
+from ansible server login as an ansible user as per class 4.From ansible user execute below command
+
+ansible all -m ping
+
+this above ping command should return with ping / pong green color.
+
+*******************************************************************************************************************
+Ansible Factors
+
+
+ansible all -m setup
+
+1. Think what condition and apply simple linux command
+2. Use command module and end of the play next new line use register: <your own name> to capture the output
+3. We are beginners.so first print it in jason format output.
+4. From that output you decide rquired conditions.in 2 play print success condition message and failure condition message.
+
+*******************************************************************************************************************
+
+
+---
+- name: going to install ex407-server package
+  hosts: node1
+  ignore_errors: yes
+  force_handlers: true
+  tasks:
+   - name: install ex407 server
+     yum:
+      name: ex407-server
+      state: latest
+     register: ex407package
+   - name: print json format
+     debug: var=ex407package
+   - name: print ex407 is not installed
+     debug:
+      msg: "Installation Failed"
+     when: ex407package.rc == 126
+   - name: start the service
+     service:
+      name: ex407-server
+      state: restarted
+     when: ex407package.rc != 126
+     register: ex407service
+   - name: print jason for service
+     debug:
+      var: ex407service
+   - name: print service failed
+     debug:
+      msg: "Service failed"
+     when: ex407service.changed == false
+
+
+
+
+---
+- name: install package
+  hosts: node1
+  tasks:
+   - name: install package
+     command: yum install https://buildlogs.centos.org/centos/6/upg/x86_64/Packages/openscap-python-1.0.8-1.0.1.el6.centos.x86_64.rpm -y
+     register: installsoft6
+     ignore_errors: yes
+   - name: print json output
+     debug:
+      var: installsoft6
+   - name: install package 7
+     command: yum install http://mirror.centos.org/centos/7/os/x86_64/Packages/ElectricFence-2.2.2-39.el7.x86_64.rpm -y
+     register: installsoft7
+     ignore_errors: yes
+   - name: print json output
+     debug:
+      var: installsoft7

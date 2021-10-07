@@ -88,7 +88,20 @@ package:
 - vsftpd
 - wget
 
+-------------------------------------------------------------------------------------------------------------------------
 
+vim httpd.yaml 
+---
+- name: install httpd
+  yum:
+   name: httpd
+   state: latest
+- name: start the httpd service
+  service:
+   name: httpd
+   state: restarted
+   
+   
 *********************************************************************************
 vim include_playbook.yml
 

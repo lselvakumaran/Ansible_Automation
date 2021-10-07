@@ -118,7 +118,7 @@ ansible all -m command -a "cat /var/tmp/hello_world.txt"
 ansible node1 -m setup
 ```
 
-- Now create jinja2 file like below.[vim inventory_.j2].
+- Now create jinja2 file like below.[vim inventory.j2].
 
 ```
 My name is {{ ansible_nodename }}.My Ip Addresss is {{ ansible_eth0.ipv4.address }}.My Operating system is {{ ansible_distribution }}.My Operating System version is {{ ansible_distribution_version}}.I am belongs to {{ ansible_os_family }}.I have {{ ansible_processor_cores }} cores.I have {{ ansible_processor_count }} processor.I am {{ ansible_machine }} architecture.My kernel version is {{ ansible_kernel }}.

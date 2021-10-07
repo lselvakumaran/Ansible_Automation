@@ -146,9 +146,9 @@ wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class1
         dest: "{{ item.dest }}"
         mode: 0777
       with_items:
-        - {src: 'hosts.j2',dest: '/var/tmp/hosts'}
-        - {src: 'resolv.conf.j2',dest: '/var/tmp/resolv.conf'}
-        - {src: 'sshd.j2',dest: '/var/tmp/sshd.conf'}
+        - {src:'hosts.j2',dest:'/var/tmp/hosts'}
+        - {src:'resolv.conf.j2',dest:'/var/tmp/resolv.conf'}
+        - {src:'sshd.j2',dest:'/var/tmp/sshd.conf'}
 ```
 - save this file.yml file
 

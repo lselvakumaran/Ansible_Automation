@@ -156,11 +156,6 @@ ansible node1 -m setup
 My name is {{ ansible_nodename }}.My Ip Addresss is {{ ansible_eth0.ipv4.address }}.My Operating system is {{ ansible_distribution }}.My Operating System version is {{ ansible_distribution_version}}.I am belongs to {{ ansible_os_family }}.I have {{ ansible_processor_cores }} cores.I have {{ ansible_processor_count }} processor.I am {{ ansible_machine }} architecture.My kernel version is {{ ansible_kernel }}.
 ```
 
-```
-My name is {{ ansible_nodename }}.\n.My Ip Addresss is {{ ansible_eth0.ipv4.address }}.\n.My Operating system is {{ ansible_distribution }}.\n.My Operating System version is {{ ansible_distribution_version}}.\n.I am belongs to {{ ansible_os_family }}.\n.I have {{ ansible_processor_cores }} cores.\n.I have {{ ansible_processor_count }} processor.\n.I am {{ ansible_machine }} architecture.\n.My kernel version is {{ ansible_kernel }}.
-```
-
-
 - create file called file.yml [vim file.yml].
 ```
 - hosts: all

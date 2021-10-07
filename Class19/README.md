@@ -10,6 +10,25 @@
  
  - **Jinja Format?:** A Jinja template is simply a text file. Jinja can generate any text-based format (HTML, XML, CSV, LaTeX, etc.).xml , or any other extension is just fine. A template contains variables and/or expressions, which get replaced with values when a template is rendered; and tags, which control the logic of the template.
 
+
+To start this handson lab,you need following resources.
+
+
+
+## Step-3: Prerequisites
+
+1.	**server.cnl.com** – 1 CPU – 1GB RAM (Python 2.7) - **Ansible Server**
+2.	**node1.cnl.com** – 1 CPU – 1GB RAM ( python 2.6 and above) - **Ansible Client 1**
+3.	**node2.cnl.com** – 1 CPU – 1GB RAM ( python 2.6 and above) - **Ansible Client 2**
+
+from ansible server login as an ansible user as per class 4.From ansible user execute below command
+
+ansible all -m ping
+
+this above ping command should return with ping / pong green color.
+
+
+
 ## scenario 1: Jinja2 file with just copy module
 
 - create file called hello_world.j2 [vim hello_world.j2].
@@ -93,6 +112,11 @@ ansible all -m command -a "cat /var/tmp/hello_world.txt"
 
 ## scenario 3: Multiple Jinja2 files with template module
 
+- install wget package.
+
+```
+sudo yum install wget -y
+```
 
 - create file called hosts.j2.
 

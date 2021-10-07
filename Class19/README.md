@@ -32,7 +32,7 @@ Variable given as inline - {{ inline_variable }} - :)
         src: hello_world.j2
         dest: /var/tmp/hello_world.txt
 ```
-- save this fie.yml file
+- save this file.yml file
 
 - Execute the ansible playbook
 
@@ -71,7 +71,7 @@ Variable given as inline - {{ inline_variable }} - :)
         src: hello_world.j2
         dest: /var/tmp/hello_world.txt
 ```
-- save this fie.yml file
+- save this file.yml file
 
 - Execute the ansible playbook
 
@@ -91,31 +91,42 @@ ansible all -m command -a "cat /var/tmp/hello_world.txt"
 ## Ansible template with_items for multiple files
 
 
-## scenario 2: Multiple Jinja2 files with template module
+## scenario 3: Multiple Jinja2 files with template module
 
 
-- create file called ex.j2 [vim ex.j2].
+- create file called hosts.j2.
 
 ```
-{{ variable_to_be_replaced }}
-This line won't be changed
-Variable given as inline - {{ inline_variable }} - :)
+wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class19/hosts.j2
 ```
-- save this hello_world.j2 file
+
+- create file called resolv.conf.j2.
+
+```
+wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class19/resolv.conf.j2
+```
+
+- create file called sshd.j2.
+
+```
+wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class19/sshd.j2
+```
 
 - create file called file.yml [vim file.yml].
 ```
 - hosts: all
-  vars:
-    variable_to_be_replaced: 'Hello world'
-    inline_variable: 'file1'
   tasks:
-    - name: Ansible Template Example
+    - name: Ansible template with_items example.
       template:
-        src: hello_world.j2
-        dest: /var/tmp/hello_world.txt
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0777
+      with_items:
+        - {src: 'hosts.j2',dest: '/var/tmp/hosts'}
+        - {src: 'resolv.conf.j2',dest: '/var/tmp/resolv.conf'}
+        - {src: 'sshd.j2',dest: '/var/tmp/sshd.conf'}
 ```
-- save this fie.yml file
+- save this file.yml file
 
 - Execute the ansible playbook
 
@@ -126,111 +137,40 @@ ansible-playbook file.yml
 - Verify the file from ansible client machines
 
 ```
-ansible all -m command -a "cat /var/tmp/hello_world.txt"
+ansible all -m command -a "cat /var/tmp/hosts"
+ansible all -m command -a "cat /var/tmp/resolv.conf"
+ansible all -m command -a "cat /var/tmp/sshd.conf"
+```
+
+## scenario 3: Jinja2 file to collect entire servers inventory
+
+- If you dont know the factors name then run the below command and paste in notepad
+
+```
+ansible node1 -m setup
+```
+
+- Now create jinja2 file like below.[vim inventory_.j2].
+
+```
+My name is {{ ansible_nodename }}.My Ip Addresss is {{ ansible_eth0.ipv4_address }}.My Operating system is {{ ansible_distribution }}.My Operating System version is {{ ansible_distribution_version}}.I am belongs to {{ ansible_os_family }}.I have {{ ansible_processor_cores }} cores.I have {{ ansible_processor_count }} processor.I am {{ ansible_machine }} architecture.My kernel version is {{ ansible_kernel }}.ansible node1 -m setup
 ```
 
 
-- **Install AWS CLI V2.x**
-   - Documentation Reference: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+- create file called file.yml [vim file.yml].
 ```
-Mac OS (for all users)
-$ curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-$ sudo installer -pkg AWSCLIV2.pkg -target /
-$ which aws
-/usr/local/bin/aws 
-$ aws --version
-aws-cli/2.0.6 Python/3.7.4 Darwin/18.7.0 botocore/2.0.0
-```   
-
-- **Install Docker CLI** 
-   - Docker Desktop for MAC: https://docs.docker.com/docker-for-mac/install/
-   - Docker Desktop for Windows: https://docs.docker.com/docker-for-windows/install/
-   - Docker on Linux: https://docs.docker.com/install/linux/docker-ce/centos/
-
-- **On AWS Console**
-   - Create Authorization Token for admin user if not created
-- **Configure AWS CLI with Authorization Token**
-```
-aws configure
-AWS Access Key ID: ****
-AWS Secret Access Key: ****
-Default Region Name: ap-south-1
-```   
-
-## Step-4: Create ECR Repository
-- Create simple ECR repo via AWS Console 
-- Repository Name: aws-ecr-nginx
-- Explore ECR console. 
-- **Create ECR Repository using AWS CLI**
-```
-aws ecr create-repository --repository-name aws-ecr-nginx --region us-east-1
-
-```
-
-## Step-5: Create Docker Image locally
-```
-wget https://raw.githubusercontent.com/stacksimplify/aws-fargate-ecs-masterclass/master/04-ECR-Elastic-Container-Registry/index.html
-wget https://raw.githubusercontent.com/stacksimplify/aws-fargate-ecs-masterclass/master/04-ECR-Elastic-Container-Registry/Dockerfile
-```
-
-```
-docker build -t 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx:1.0.0 . 
-docker run --name aws-ecr-nginx -p 80:80 --rm -d 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx:1.0.0
+- hosts: all
+  tasks:
+    - name: Ansible template inventory collection example.
+      template:
+        src: inventory_.j2
+        dest: /var/tmp/{{ ansible_nodename }}_inventory.txt
+        mode: 0777
 ```
 
 
-## Step-6: Push Docker Image to AWS ECR
-- Push the docker image to ECR
-- **AWS CLI Version 1.x**
-```
-AWS CLI Version 1.x
-aws ecr get-login --no-include-email --region <your-region>
-aws ecr get-login --no-include-email --region us-east-1
-Use "docker login" command from previous command output
-docker push 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx:1.0.0
-```
-- **AWS CLI Version 2.x**
-```
-AWS CLI Version 2.x
-aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-ecr-repo-url>
-
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx
-
-docker push 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx:1.0.0
-```
-
-
-## Step-7: Using ECR Image with Amazon ECS
-- Create Task Definition: aws-ecr-nginx
-   - Container Image: 456774515540.dkr.ecr.us-east-1.amazonaws.com/aws-ecr-nginx:1.0.0
-   - Container Port - 80
-- Create Service: aws-ecr-nginx-svc
-- Test it
-
-
-## Now delete all images and containers (Stop and Delete)
-
-
-## Step-8: To stop any running container
-```
-docker stop $(docker ps -q)  
-```
-
-## Step-9: To remove all the containers
+- Execute the ansible playbook
 
 ```
-docker rm $(docker ps -a -q)
-```
-
-## Step-10: To remove all docker images in a single command
-```
-docker rmi $(docker images -a -q)
-```
-
-## Step-11: Now you have clean environment
-
-```
-docker pull cloudnloud/nginxapp2:latest
-
-docker run -dit --name cloudnloud-web -p 80:80 cloudnloud/nginxapp2:latest
+ansible-playbook file.yml
 ```

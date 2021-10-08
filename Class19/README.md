@@ -204,7 +204,7 @@ ansible-playbook tasks.yml
 ```
 ansible-playbook tasks.yml
 ```
-
+- https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
 
 ## scenario 7: Specific lookup plugin inventory_hostnames that can be used like this:
 

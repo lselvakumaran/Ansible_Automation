@@ -59,10 +59,10 @@ ansible-playbook tasks.yml
 - Verify the file from ansible client machines
 
 ```
-ansible all -m command -a "cat /etc/passwd | grep -i testuser1"
-ansible all -m command -a "cat /etc/passwd | grep -i testuser2"
-ansible all -m command -a "cat /etc/group | grep -i testuser1"
-ansible all -m command -a "cat /etc/group | grep -i testuser2"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser1"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser2"
+ansible all -m shell -a "cat /etc/group | grep -i testuser1"
+ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
 ## scenario 2: Repeated tasks can be written as standard loops
@@ -95,10 +95,10 @@ ansible-playbook tasks.yml
 - Verify the file from ansible client machines
 
 ```
-ansible all -m command -a "cat /etc/passwd | grep -i testuser1"
-ansible all -m command -a "cat /etc/passwd | grep -i testuser2"
-ansible all -m command -a "cat /etc/group | grep -i testuser1"
-ansible all -m command -a "cat /etc/group | grep -i testuser2"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser1"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser2"
+ansible all -m shell -a "cat /etc/group | grep -i testuser1"
+ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
 ## scenario 3: Registering variables with a loop
@@ -164,10 +164,10 @@ ansible-playbook tasks.yml
 - Verify the package installation status from ansible client machines
 
 ```
-ansible all -m command -a "cat /etc/passwd | grep -i testuser1"
-ansible all -m command -a "cat /etc/passwd | grep -i testuser2"
-ansible all -m command -a "cat /etc/group | grep -i testuser1"
-ansible all -m command -a "cat /etc/group | grep -i testuser2"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser1"
+ansible all -m shell -a "cat /etc/passwd | grep -i testuser2"
+ansible all -m shell -a "cat /etc/group | grep -i testuser1"
+ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
 ## scenario 5: Retrying a task until a condition is met

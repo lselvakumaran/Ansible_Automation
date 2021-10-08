@@ -175,37 +175,6 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ansible-playbook tasks.yml
 ```
 
-## scenario 6: Show all the hosts in the inventory
-
-- Show all the hosts in the inventory. 
-- create file called tasks.yml [vim tasks.yml].
-
-```
----
-- name: Show all the hosts in the inventory
-  hosts: all
-  become: true
-  tasks:
-  - name: Show all the hosts in the inventory
-    debug:
-     msg: "{{ item }}"
-    loop: "{{ groups['all'] }}"
-
-  - name: Show all the hosts in the current play
-    debug:
-     msg: "{{ item }}"
-    loop: "{{ ansible_play_batch }}" 
-```
-
-- save this tasks.yml file
-
-- Execute the ansible playbook
-
-```
-ansible-playbook tasks.yml
-```
-- https://docs.ansible.com/ansible/latest/reference_appendices/special_variables.html
-
 ## scenario 7: Specific lookup plugin inventory_hostnames that can be used like this:
 
 

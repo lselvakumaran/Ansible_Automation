@@ -175,35 +175,6 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ansible-playbook tasks.yml
 ```
 
-## scenario 7: Specific lookup plugin inventory_hostnames that can be used like this:
-
-
-```
----
-- name: Show all the hosts in the inventory
-  hosts: all
-  become: true
-  tasks:
-  - name: Show all the hosts in the inventory
-    debug:
-     msg: "{{ item }}"
-    loop: "{{ query('inventory_hostnames', 'all') }}"
-
-  - name: Show all the hosts matching the pattern, ie all but the group www
-    debug:
-     msg: "{{ item }}"
-    loop: "{{ query('inventory_hostnames', 'all:!www') }}"
-```
-
-- save this tasks.yml file
-
-- Execute the ansible playbook
-
-```
-ansible-playbook tasks.yml
-```
-
-
 ## scenario 8: with_list is directly replaced by loop.
 
 

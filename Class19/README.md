@@ -101,37 +101,6 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser1"
 ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
-## scenario 3: Registering variables with a loop
-
-- create file called tasks.yml [vim tasks.yml].
-```
----
-- name: Repeated tasks can be written as standard loops
-  hosts: all
-  become: true
-  tasks:
-  - name: Register loop output as a variable
-    yum: "{{ item }}"
-    loop:
-     - "httpd"
-     - "vsftpd"
-```
-
-- save this tasks.yml file
-
-- Execute the ansible playbook
-
-```
-ansible-playbook tasks.yml
-```
-
-- Verify the package installation status from ansible client machines
-
-```
-ansible all -m command -a "yum list httpd"
-ansible all -m command -a "yum list vsftpd"
-```
-
 ## scenario 4: Iterating over a list of hashes
 
 - If you have a list of hashes, you can reference subkeys in a loop. 

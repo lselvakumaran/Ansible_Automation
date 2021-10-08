@@ -101,7 +101,7 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser1"
 ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
-## scenario 4: Iterating over a list of hashes
+## scenario 3: Iterating over a list of hashes
 
 - If you have a list of hashes, you can reference subkeys in a loop. 
 - create file called tasks.yml [vim tasks.yml].
@@ -139,7 +139,7 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser1"
 ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ```
 
-## scenario 5: Retrying a task until a condition is met
+## scenario 4: Retrying a task until a condition is met
 
 - You can use the until keyword to retry a task until a certain condition is met. 
 - create file called tasks.yml [vim tasks.yml].
@@ -175,7 +175,7 @@ ansible all -m shell -a "cat /etc/group | grep -i testuser2"
 ansible-playbook tasks.yml
 ```
 
-## scenario 8: with_list is directly replaced by loop.
+## scenario 5: with_list is directly replaced by loop.
 
 
 ```
@@ -207,7 +207,7 @@ ansible-playbook tasks.yml
 ansible-playbook tasks.yml
 ```
 
-## scenario 9: Loop - User Creation.
+## scenario 6: Loop - User Creation.
 
 
 ```
@@ -240,7 +240,7 @@ ansible-playbook tasks.yml
 ```
 
 
-## scenario 10: Loop - User Creation.
+## scenario 7: Loop - User Creation.
 
 
 ```
@@ -269,7 +269,7 @@ ansible-playbook tasks.yml
 ansible-playbook tasks.yml
 ```
 
-## scenario 11: Ansible Loops with indexes
+## scenario 8: Ansible Loops with indexes
 
 - Occasionally, you may want to keep track of the index values within your array of items. For this, use the ‘with indexed_items‘ lookup. The index value begins from 0 whilst The loop index begins from item.0 and the value from item.1
 
@@ -300,7 +300,7 @@ ansible-playbook tasks.yml
 ```
 
 
-## scenario 12: Conditionals in Ansible Loops
+## scenario 9: Conditionals in Ansible Loops
 
 - In Ansible loops you can use the conditional statement when to control the looping based on the nature of variables or system facts. Consider the playbook below where we have a list of packages that need to be installed.
 
@@ -342,7 +342,7 @@ ansible-playbook tasks.yml
 ansible-playbook tasks.yml
 ```
 
-## scenario 13: Iterating over list of hashes
+## scenario 10: Iterating over list of hashes
 
 - Let's take a look at a basic example of a hash to get a better idea of how this unique but popular data structure works:
 
@@ -386,7 +386,7 @@ ansible-playbook tasks.yml
 ```
 
 
-## scenario 13: Iterate over dictionary
+## scenario 11: Iterate over dictionary
 
 - A dictionary is a collection which is unordered, changeable and indexed. In Python dictionaries are written with curly brackets, and they have keys and values.
 

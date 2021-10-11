@@ -239,6 +239,12 @@ ansible-playbook tasks.yml
 ansible-playbook tasks.yml
 ```
 
+ 
+ ```
+ansible all -m shell -a "cat /etc/passwd | grep -i john"
+ansible all -m shell -a "cat /etc/passwd | grep -i mike"
+ansible all -m shell -a "cat /etc/passwd | grep -i andrew"
+```
 
 ## scenario 7: Loop - User Creation.
 

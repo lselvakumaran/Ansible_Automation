@@ -52,45 +52,22 @@ this above ping command should return with ping / pong green color.
 
 ## scenario 1: How to create ansible role folder structure
 
-- create file called tasks.yml [vim tasks.yml].
+- create roles dirdctory
+```
+mkdir roles
+cd roles
+```
+
+- create sample role and learn how directory structure are ?.
 ```
 ansible-galaxy init test-role-1
 ```
 
-- save this tasks.yml file
 
-- Execute the ansible playbook
 
-```
-ansible-playbook tasks.yml
-```
+## scenario 2: single url test
 
-## scenario 2: Ignore error in entire playbook
-
-- create file called tasks.yml [vim tasks.yml].
-```
----
-- name: Repeated tasks can be written as standard loops
-  hosts: all
-  become: true
-  ignore_errors: yes
-  tasks:
-  - name: this will not be counted as a failure 1
-    command: /bin/false
-  - name: this will not be counted as a failure 2
-    command: /bin/false
-  - name: this will not be counted as a failure 3
-    debug: 
-     msg: "i am now able to clear all the interview on my own" 	
-```
-
-- save this tasks.yml file
-
-- Execute the ansible playbook
-
-```
-ansible-playbook tasks.yml
-```
+![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/multi-url.JPG)
 
 ## scenario 3: changed_when Statement
 

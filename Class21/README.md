@@ -52,8 +52,6 @@ this above ping command should return with ping / pong green color.
 
 - create roles dirdctory
 ```
-mkdir roles
-cd roles
 vim urlmonitor.yml
 ```
 

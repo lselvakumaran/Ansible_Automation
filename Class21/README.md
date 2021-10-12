@@ -60,171 +60,136 @@ cd roles
 
 - create sample role and learn how directory structure are ?.
 ```
-ansible-galaxy init test-role-1
+ansible-galaxy init singleurl
 ```
 
+- Type below command to see how the folder structure looks like ?.
+- make sure you are in roles directory.
 
+```
+tree
+```
+
+- Declare your roles path in your environnment related ansible.cfg file.
+
+
+```
+vim ansible.cfg
+[defaults]
+inventory=hosts
+remote_user=ansible
+timeout=3000
+roles_path=/home/ansible/dev/roles
+
+[privilege_escalation]
+become=True
+become_method=sudo
+become_user=root
+become_ask_pass=False
+```
 
 ## scenario 2: single url test
 
 ![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/multi-url.JPG)
 
-## scenario 3: changed_when Statement
+- single url is just dummy skeleton
 
-- Example 1:  Start the HTTPD (or) Apache Server which is already started
-- Having said that, Let’s start with our trialWe are going to start the HTTPD (or) Apache Server which is already running. 
-- Ideally, If it is already running it should not report as changed
+- goto singleurl folder.
+- we are going to test http://www.google.com/ url is rechable and working or not ?.
 
-
-- Step 1: Direct register and see how register output in json format
+- go to defaults folder and set the variable
 
 ```
---- 
-- hosts: all
-  ignore_errors: yes
-  tasks:
-    - name: "Start the Apache HTTPD Server"
-      shell: "httpd -k start"
-      register: starthttpdout     
-
-    - debug:
-        var: starthttpdout.stdout
-```		
-
-```
-ansible all -m shell -a "ps -eaf|grep -i httpd"
-```
-
-- Step 2: Modified Playbook with Debug Enabled.To know the truth, you should modify the playbook with a debug and register as follows
-
-```
---- 
-- hosts: all
-  ignore_errors: yes
-  tasks:
-    - name: "Start the Apache HTTPD Server"
-      shell: "httpd -k start"
-      register: starthttpdout     
-
-    - debug:
-        var: starthttpdout
-```	
-
-
-- Step 3: Modified Playbook with Debug Enabled.To know the truth, you should modify the playbook with a debug and register as follows
-
-```
---- 
-- hosts: all
-  ignore_errors: yes
-  tasks:
-    - name: "Start the Apache HTTPD Server"
-      shell: "httpd -k start"
-      register: starthttpdout     
-
-    - debug:
-        var: starthttpdout.stdout
-```		
-
-```
-ansible all -m shell -a "ps -eaf|grep -i httpd"
-```
-
-- Step 4: Here comes the changed_when to explicitly tell ansible when to consider the task as Successful (or) changed
-
-- Let us re modify our same Playbook with changed_when
-
-```
-ansible node2 -m shell -a "httpd -k stop"
-```
-
-
-```
---- 
-- hosts: all
-  tasks:
-  - name: "Start the Apache HTTPD Server"
-    shell: "httpd -k start"
-    register: starthttpdout
-    changed_when: "'already running' not in starthttpdout.stdout"
-
-  - debug:
-      msg: "{{starthttpdout.stdout}}"
-```  
-
-```
-ansible all -m shell -a "ps -eaf|grep -i httpd"
-```
-
-
-## scenario 4: failed_when Statement
-
-- System Requirement / Prerequisite check before Installation
-This one is a more real-time scenario every one of us might have come across, During the installation of software, in midway, the installation wizard will fail stating that there is no enough memory (or) the minimum system requirements to install that specific software is not met
-
-- As we all know, Every Software needs some minimum system requirements. When they are not met, The installation would fail.
-
-- In our case, We are going to take weblogic application server installation as an example.
-
-- As per oracle recommendation for weblogic 12c to function properly and for hassle-free installation, The system must meet the following requirement
-
-- 2 GB of Physical Memory ( RAM)
-- Minimum 4 GB of Disk space in Domain Directory /opt
-- Minimum 1 GB of disk space in /tmp directory
-- Now we are going to perform a quick pre-requisite check using ansible failed_when and determine whether the system requirement specified above are met
-
-- Consider the following playbook
-
-
-```
+cd singleurl
+cd defaults
+vim roles/singleurl/defaults/main.yml 
 ---
-- hosts: all
-  tasks:
-  - name: Making sure the /tmp has more than 1gb
-    shell: "df -h /tmp|grep -v Filesystem|awk '{print $4}'|cut -d G -f1"
-    register: tmpspace
-    failed_when: "tmpspace.stdout|float < 1"
-
-  - name: Making sure the /opt has more than 4gb
-    shell: "df -h /opt|grep -v Filesystem|awk '{print $4}'|cut -d G -f1"
-    register: optspace
-    failed_when: "optspace.stdout|float < 4"
-
-  - name: Making sure the Physical Memory more than 2gb
-    shell: "cat /proc/meminfo|grep -i memtotal|awk '{print $2/1024/1024}'"
-    register: memory
-    failed_when: "memory.stdout|float < 2"
-```  
-
-- if you dont understand the above playbook.Try to play like below.....
+url: http://www.google.com/
 
 ```
+Now go to tasks folder and enter what you want to test and print.
+
+```
+cd singleurl
+cd tasks
+vim roles/singleurl/tasks/main.yml 
 ---
-- hosts: all
-  tasks:
-  - name: Making sure the /tmp has more than 1gb
-    shell: "df -h /tmp|grep -v Filesystem|awk '{print $4}'|cut -d G -f1"
-    register: tmpspace
-    failed_when: "tmpspace.stdout|float < 1"
-  - name: print jason output
-    debug:
-     var: tmpspace
-  - name: print /tmp file system has enough free space
-    debug:
-     msg: "/tmp flesystem is having enough free space"
-    when: tmpspace.stdout > 15
+- name: check url is reachable or not
+  uri:
+   url: "{{ url }}"
+- name: print the {{ url }} is working
+  debug:
+   msg: "{{ url }} is working and reachble"
 
-  - name: Making sure the /opt has more than 4gb
-    shell: "df -h /opt|grep -v Filesystem|awk '{print $4}'|cut -d G -f1"
-    register: optspace
-    failed_when: "optspace.stdout|float < 4"
-  - name: print /opt file system has enough free space
-    debug:
-     msg: "/opt flesystem is having enough free space"
-    when: optspace.stdout > 15
+```
 
-  - name: Making sure the Physical Memory more than 2gb
-    shell: "cat /proc/meminfo|grep -i memtotal|awk '{print $2/1024/1024}'"
-    register: memory
-    failed_when: "memory.stdout|float < 2"
-```  
+- come out of roles folder.
+
+- create new yaml playbook
+
+```
+vim /home/ansible/dev/singleurltesting.yml
+---
+- name: test the url reachablity
+  hosts: all
+  roles:
+   - singleurl
+```
+
+## scenario 3: Now perform the same above test and need to test 100's of urls
+
+![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/multi-url.JPG)
+
+- multiurl is just actual where you need to mention all the urls you want to monitor.
+
+- goto multiurl folder.
+- we are going to test many url's are rechable and working or not ?.
+
+- go to meta folder and list all the urls which you want to monitor
+
+```
+cd multiurl
+cd meta
+vim /home/ansible/dev/roles/multiurl/meta/main.yml 
+
+in dependencies section remove []
+
+then add the below lines
+
+ - { role: singleurl, url: "http://cloudnloud.com/"}
+ - { role: singleurl, url: "http://youtube.com/"}
+ - { role: singleurl, url: "http://www.tcs.com/"}
+ - { role: singleurl, url: "http://www.infosys.com/"}
+ - { role: singleurl, url: "http://www.wipro.com/"}
+ - { role: singleurl, url: "http://www.irctc.com/"}
+ - { role: singleurl, url: "http://www.redbus.com/"}
+ - { role: singleurl, url: "http://www.emirates.com/"}
+ - { role: singleurl, url: "http://www.skyscanner.com/"}
+ - { role: singleurl, url: "http://www.redhat.com/"}
+ - { role: singleurl, url: "http://www.airfrance.com/"}
+
+```
+Now go to tasks folder and enter what you want to test and print.
+
+```
+cd multiurl
+cd tasks
+vim /home/ansible/dev/roles/multiurl/tasks/main.yml 
+---
+- name: print all url monitoring tasks has been completed.
+  debug:
+   msg: "we now have good confidence on what is role and what is dummy role and what is meta depedencies"
+```
+
+- come out of roles folder.
+
+- create new yaml playbook
+
+```
+vim /home/ansible/dev/multiurltesting.yml
+---
+- name: test the url reachablity
+  hosts: all
+  roles:
+   - multiurl
+```

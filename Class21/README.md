@@ -27,6 +27,9 @@
 - Use the --roles-path option for the ansible-galaxy command.
 - Define roles_path in an ansible. cfg file.
 
+## 7:  Folder Structure ?
+**Ansible roles Directory Structure**
+https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/Ansible-Roles-Structure.png
 
 To start this handson lab,you need following resources.
 

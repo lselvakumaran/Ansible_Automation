@@ -87,13 +87,14 @@ vim urlmonitor.yml
      when: microsofturl.status == 200
 ```
 
+- execute the playbook
 
 ```
 ansible-playbook urlmonitor.yml
 ```
 
 
-## scenario 1: How to create ansible role folder structure
+## scenario 2: How to create ansible role folder structure
 
 - create roles dirdctory
 ```
@@ -131,7 +132,7 @@ become_user=root
 become_ask_pass=False
 ```
 
-## scenario 2: single url test
+## scenario 3: single url test
 
 ![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/multi-url.JPG)
 
@@ -179,7 +180,7 @@ vim /home/ansible/dev/singleurltesting.yml
    - singleurl
 ```
 
-## scenario 3: Now perform the same above test and need to test 100's of urls
+## scenario 4: Now perform the same above test and need to test 100's of urls
 
 ![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/multi-url.JPG)
 

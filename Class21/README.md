@@ -48,6 +48,49 @@ ansible all -m ping
 
 this above ping command should return with ping / pong green color.
 
+## scenario 1: How to monitor many urls ?
+
+- create roles dirdctory
+```
+mkdir roles
+cd roles
+vim urlmonitor.yml
+```
+
+- create sample role and learn how directory structure are ?.
+```
+---
+- name: check the url's reachable and working
+  hosts: all
+  tasks:
+   - name: check url1
+     uri:
+      url: http://www.google.com/
+     register: googleurl
+   - name: print json output
+     debug:
+      var: googleurl
+   - name: print google url1 is working
+     debug:
+      msg: google url1 is reahable and working
+     when: googleurl.status == 200
+   - name: check url2
+     uri:
+      url: http://www.microsoft.com/
+     register: microsofturl
+   - name: print json output
+     debug:
+      var: microsofturl
+   - name: print microsoft url2 is working
+     debug:
+      msg: microsoft url2 is reahable and working
+     when: microsofturl.status == 200
+```
+
+
+```
+ansible-playbook urlmonitor.yml
+```
 
 
 ## scenario 1: How to create ansible role folder structure

@@ -29,7 +29,6 @@
 
 ## 7:  Folder Structure ?
 **Ansible roles Directory Structure**
-https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/Ansible-Roles-Structure.png
 
 ![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class21/Ansible-Roles-Structure.png)
 

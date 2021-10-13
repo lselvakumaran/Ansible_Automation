@@ -49,222 +49,179 @@ ansible all -m ping
 this above ping command should return with ping / pong green color.
 
 
-## before install some package open firewall port ?
+## 5: before install some package open firewall port ?
 **Ansible roles - resuable role - we can open port multiple times for any package installation**
 
 ![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class23/firewall-port-opening.JPG)
 
 
-## scenario 1: How to do patching normally without roles ?
+## scenario 1: create dummy role - Allow service in firewall ?
 
 
-```
-vim patching.yml
-```
-```
----
-- name: update entire servers
-  hosts: all
-  tasks:
-   - name: update the system
-     yum:
-      name: "*"
-      state: latest
-```
-- In the first line, we give the task a meaningful name so we know what Ansible is doing. In the next line, the yum module updates the CentOS virtual machine (VM), then name: "*" tells yum to update everything, and, finally, state: latest updates to the latest RPM
-
-
-```
-ansible-playbook patching.yml
-```
-
-```
----
-- name: Restart the servers and with new kernel
-  hosts: all
-  tasks:
-   - name: restart system to reboot to newest kernel
-     shell: "sleep 5 && reboot"
-     async: 1
-     poll: 0
-   - name: wait for 10 seconds
-     pause:
-      seconds: 10
-   - name: wait for the system to reboot
-     wait_for_connection:
-      connect_timeout: 20
-      sleep: 5
-      delay: 5
-      timeout: 60
-   - name: install epel-release
-     yum:
-      name: epel-release
-      state: latest
-```
-- Async: async is used to explicitly set the timeout you wish to apply to this task. Rather than relying on the connection method timeout, we can have a custom timeout for a particular task. The async tasks will run until they either complete, fail, or timeout according to their async value.
-
-## ASYNC - Example
-```
-- name: update the system packages 
-  command: yum update -y
-  async: 180 # the total time allowed to complete the package update task
-  poll: 10 # Polling Interval in Seconds
-  register: package_update
-```
-	  
-- Poll: poll is a value for which the playbook will stick on the task until it either completes, fails, or times out. For long running asynchronous tasks, it’s good to set poll=0 so that Ansible can immediately jump to the next task after starting the current one without waiting for the result.
-
-- Poll: according to the interval we have set for the poll, it will keep on the polling status of the task. For example, if poll=10, it will try to check the status of the task after every 10 seconds, if it met the required state of what we have defined in until.
-
-- Until: it will keep on checking the task until it is finished or gets a timeout.
-
-
-- execute the playbook
-
-```
-ansible-playbook patching.yml
-```
-
-
-## scenario 2: How to install nginx without role
-
-```
-vim nginx.yml
-```
-
-```
----
-- name: instll nginx
-  hosts: all
-  vars:
-   - type_of_webserver: nginx
-  tasks:
-   - name: install nginx
-     yum: 
-	  name: nginx 
-	  state: latest
-   - name: copy index.html template
-     template:
-      src: index.html
-      dest: /usr/share/nginx/html
-     notify: restart nginx
-   - name: enable and start service
-     service:
-      name: nginx
-      enabled: yes
-      state: started
-  handlers:
-   - name: restart nginx
-     service:
-	  name: nginx
-	  state: restarted
-```
-
-```
-vim index.html
-```
-
-```
-<!DOCTYPE html>
-<html>
-<head>
-<title>My Nginx web server</title>
-</head>
-<body><h1>Welcome to my {{ type_of_webserver }} webpage </h1></body>
-</html>
-```
-
-- declare variable in inventory file as an global variable or declare in the same playbook as an local variable
-```
-vim hosts
-
-[all:vars]
-type_of_webserver=nginx
-```
-
-- execute the playbook
-
-```
-ansible-playbook nginx.yml
-```
-
-
-## scenario 3: nginx installation via resuable role
-
-- create nginx role and learn how directory structure are ?.
 ```
 cd roles
-ansible-galaxy init nginx_role
+ansible-galaxy init myfirewall
 ```
 
 ```
-vim nginx_role/tasks/main.yml
-```
-```
-# tasks file for nginx_role
-- name: install nginx
-  yum: name=nginx state=latest
-- name: copy index.html template
-  template:
-   src: index.html
-   dest: /usr/share/nginx/html
-  notify: restart nginx
-- name: enable and start service
-  service:
-   name: nginx
-   enabled: yes
-   state: started
-```
+vim myfirewall/defaults/main.yml
+---
+firewall_service: ssh
 
 ```
-vim nginx_role/templates/index.html
-```
-```
-<!DOCTYPE html>
-<html>
-<head>
-<title>My Nginx web server</title>
-</head>
-<body><h1>Welcome to my {{ type_of_webserver }} webpage </h1></body>
-</html>
-```
+
+- save the file
 
 ```
-vim nginx_role/handlers/main.yml
+vim myfirewall/handlers/main.yml
+---
+- name: restart firewalld
+  service: name=firewalld state=restarted enabled=yes 
 ```
 
-```
-# handlers file for nginx_role
-- name: restart nginx
-  service: name=nginx state=restarted
-```
+- save the file
 
 ```
-vim nginx_role/defaults/main.yml
-```
-
-```
-# defaults file for nginx_role
-type_of_webserver: Nginx
+vim myfirewall/tasks/main.yml
+---
+- name: install firewalld
+  yum: name=firewalld state=present
+- name: start firewalld service
+  service: name=firewalld state=restarted enabled=yes
+- name: open ports in firewalld
+  firewalld: 
+   service: "{{ firewall_service }}"
+   permanent: true 
+   state: enabled 
+   immediate: true
 ```
 
 - go to parent directory where you have ansible.cfg file is there.
 - create new playbook like below
 
 ```
-vim nginx.yml
+vim firewall.yml
 ```
 
 ```
 ---
-- install nginx using role
-# Install nginx Playbook
-- hosts: ansible_client
+- name: install nginx using role
+  hosts: all
   become: yes
   roles:
-   - nginx_role
+   - myfirewall
 ```
 
 ```
-ansible-playbook nginx.yml
+ansible-playbook firewall.yml
 ```
+
+## Scenario 2: create main package installation role 
+## (call firewall opening whenever you want to install any package)?
+
+
+```
+cd roles
+ansible-galaxy init webserver
+```
+
+```
+vim webserver/files/index.html
+```
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>My web server</title>
+</head>
+<body><h1>Welcome to my webpage </h1></body>
+</html>
+```
+
+
+- save the file
+
+```
+vim webserver/handlers/main.yml
+---
+- name: restart httpd
+  service: name=httpd state=restarted
+```
+
+- save the file
+
+
+```
+vim webserver/meta/main.yml
+---
+dependencies:
+ - { role: myfirewall, firewall_service: http }
+```
+
+- save the file
+
+
+```
+vim webserver/templates/vhost.conf.j2
+# {{ ansible_managed }}
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@{{ ansible_fqdn }}
+    ServerName {{ ansible_fqdn }}
+    ErrorLog logs/{{ ansible_hostname }}-error.log
+    CustomLog logs/{{ ansible_hostname }}-common.log common
+    DocumentRoot /var/www/vhosts/{{ ansible_hostname }}/
+
+    <Directory /var/www/vhosts/{{ ansible_hostname }}/>
+	Options +Indexes +FollowSymlinks +Includes
+	Order allow,deny
+	Allow from all
+    </Directory>
+</VirtualHost>
+```
+
+- save the file
+
+```
+vim webserver/tasks/main.yml
+---
+- name: install httpd
+  yum: name=httpd state=latest
+- name: start httpd service
+  service: name=httpd state=restarted enabled=yes
+- name: copy the html file
+  copy:
+   src: html/
+   dest: "/var/www/vhosts/{{ ansible_hostname }}"
+- name: vhost template file
+  template:
+   src: vhost.conf.j2
+   dest: /etc/httpd/conf.d/vhost.conf
+   owner: root
+   group: root
+   mode: 0644
+  notify:
+    - restart httpd
+```
+
+- go to parent directory where you have ansible.cfg file is there.
+- create new playbook like below
+
+```
+vim web.yml
+```
+
+```
+---
+- name: install webserver and add webserver service in firewall using role
+  hosts: all
+  become: yes
+  roles:
+   - webserver
+```
+
+```
+ansible-playbook web.yml
+```
+

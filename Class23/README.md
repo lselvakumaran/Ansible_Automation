@@ -48,6 +48,13 @@ ansible all -m ping
 
 this above ping command should return with ping / pong green color.
 
+
+## before install some package open firewall port ?
+**Ansible roles - resuable role - we can open port multiple times for any package installation**
+
+![ScreenShot](https://github.com/cloudnloud/Ansible_Automation/blob/main/Class23/firewall-port-opening.JPG)
+
+
 ## scenario 1: How to do patching normally without roles ?
 
 

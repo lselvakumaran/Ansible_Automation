@@ -250,9 +250,8 @@ vim nginx.yml
 
 ```
 ---
-- install nginx using role
-# Install nginx Playbook
-- hosts: ansible_client
+- name: install nginx using role
+  hosts: all
   become: yes
   roles:
    - nginx_role

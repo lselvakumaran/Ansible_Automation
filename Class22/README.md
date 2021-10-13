@@ -193,7 +193,7 @@ vim nginx_role/tasks/main.yml
 ```
 
 ```
-vim nginx_role/template/index.html
+vim nginx_role/templates/index.html
 ```
 ```
 <!DOCTYPE html>
@@ -211,18 +211,17 @@ vim nginx_role/handlers/main.yml
 
 ```
 # handlers file for nginx_role
-- name: restart nginx service
+- name: restart nginx
   service: name=nginx state=restarted
-  listen: “restart nginx”
 ```
 
 ```
-vim Nginx_role/defaults/main.yml
+vim nginx_role/defaults/main.yml
 ```
 
 ```
 # defaults file for nginx_role
-type_of _webserver: Nginx
+type_of_webserver: Nginx
 ```
 
 - go to parent directory where you have ansible.cfg file is there.

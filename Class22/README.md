@@ -98,8 +98,10 @@ ansible-playbook patching.yml
 
 - Poll: poll is a value for which the playbook will stick on the task until it either completes, fails, or times out. For long running asynchronous tasks, it’s good to set poll=0 so that Ansible can immediately jump to the next task after starting the current one without waiting for the result.
 
-- Until: it will keep on checking the task until it is finished or gets a timeout.
 - Poll: according to the interval we have set for the poll, it will keep on the polling status of the task. For example, if poll=10, it will try to check the status of the task after every 10 seconds, if it met the required state of what we have defined in until.
+
+- Until: it will keep on checking the task until it is finished or gets a timeout.
+
 
 - execute the playbook
 

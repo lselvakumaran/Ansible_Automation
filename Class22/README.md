@@ -250,8 +250,8 @@ vim nginx.yml
 
 ```
 ---
-- install nginx using role
-- hosts: all
+- name: install nginx using role
+  hosts: all
   become: yes
   roles:
    - nginx_role

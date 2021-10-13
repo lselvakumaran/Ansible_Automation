@@ -65,6 +65,9 @@ ansible-galaxy init myfirewall
 
 ```
 vim myfirewall/defaults/main.yml
+```
+
+```
 ---
 firewall_service: ssh
 
@@ -83,6 +86,9 @@ vim myfirewall/handlers/main.yml
 
 ```
 vim myfirewall/tasks/main.yml
+```
+
+```
 ---
 - name: install firewalld
   yum: name=firewalld state=present
@@ -144,6 +150,9 @@ vim webserver/files/index.html
 
 ```
 vim webserver/handlers/main.yml
+```
+
+```
 ---
 - name: restart httpd
   service: name=httpd state=restarted
@@ -154,6 +163,9 @@ vim webserver/handlers/main.yml
 
 ```
 vim webserver/meta/main.yml
+```
+
+```
 ---
 dependencies:
  - { role: myfirewall, firewall_service: http }
@@ -164,6 +176,9 @@ dependencies:
 
 ```
 vim webserver/templates/vhost.conf.j2
+```
+
+```
 # {{ ansible_managed }}
 
 <VirtualHost *:80>
@@ -185,6 +200,9 @@ vim webserver/templates/vhost.conf.j2
 
 ```
 vim webserver/tasks/main.yml
+```
+
+```
 ---
 - name: install httpd
   yum: name=httpd state=latest

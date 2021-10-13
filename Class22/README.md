@@ -96,6 +96,15 @@ ansible-playbook patching.yml
 ```
 - Async: async is used to explicitly set the timeout you wish to apply to this task. Rather than relying on the connection method timeout, we can have a custom timeout for a particular task. The async tasks will run until they either complete, fail, or timeout according to their async value.
 
+## ASYNC - Example
+```
+- name: update the system packages 
+  command: yum update -y
+  async: 180 # the total time allowed to complete the package update task
+  poll: 10 # Polling Interval in Seconds
+  register: package_update
+```
+	  
 - Poll: poll is a value for which the playbook will stick on the task until it either completes, fails, or times out. For long running asynchronous tasks, it’s good to set poll=0 so that Ansible can immediately jump to the next task after starting the current one without waiting for the result.
 
 - Poll: according to the interval we have set for the poll, it will keep on the polling status of the task. For example, if poll=10, it will try to check the status of the task after every 10 seconds, if it met the required state of what we have defined in until.

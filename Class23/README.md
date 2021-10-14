@@ -208,9 +208,13 @@ vim webserver/tasks/main.yml
   yum: name=httpd state=latest
 - name: start httpd service
   service: name=httpd state=restarted enabled=yes
+- name: create vhost directory
+  file:
+   path: /var/www/vhosts/
+   state: directory
 - name: copy the html file
   copy:
-   src: html/
+   src: index.html
    dest: "/var/www/vhosts/{{ ansible_hostname }}"
 - name: vhost template file
   template:

@@ -159,83 +159,78 @@ vim package/vars/main.yml
 
 ```
 pack1:
-        - alice
-        - fred
-        - robin
-        - natasha
-        - eric
+        - zip
+		- unzip
+		- httpd
+		- vsftpd
+		- xreader
 pack2:
-        - rob
-        - bob
-        - michael
-        - williams
-        - julia
+        - xmp
+		- xdotool
+		- x11vnc
+		- wt
+		- wol
+		- whois
+
 pack3:
-        - sara
-        - frank
-        - larry
-        - lisa
-        - roger
+        - agda
+		- aime
+		- apper
+		- laszip
+		- uhd-tools
+		- uget
+		- uptime
+		- scorep
 ```
 
 - save the file
 
 
 ```
-vim usermgmt/tasks/main.yml
+vim package/tasks/main.yml
 ```
 
 ```
 ---
-- name: User Creation progress
+- name: package management is in progress
   debug:
-   msg: "all users has been created and Nominated users also has been removed from the servers"
+   msg: "all Package maintanance has been completed."
 ```
 
 - go to parent directory where you have ansible.cfg file is there.
 - create new playbook like below
 
 ```
-vim user.yml
+vim software.yml
 ```
 
 ```
 ---
-- name: create user and groups
+- name: Install and Remove softwares
   hosts: all
   roles:
-   - usermgmt
+   - package
   tasks:
-   - name: create group
-     group: 
+   - name: Install package set 1
+     yum:
       name: "{{ item }}"
       state: present
      with_items:
-      - administrators
-      - developers
-      - managers
-   - name: create STAFF USER
-     user:
+      - "{{ pack1 }}"
+   - name: Install package set 1
+     yum:
       name: "{{ item }}"
       state: present
-      groups: administrators,developers
      with_items:
-      - "{{ staff }}"
-   - name: create guests USER
-     user:
-      name: "{{ item }}"
-      state: present
-      groups: developers,managers
-     with_items:
-      - "{{ guests }}"
-   - name: revoke the USER
-     user:
+      - "{{ pack2 }}"
+   - name: Remove package set 3
+     yum:
       name: "{{ item }}"
       state: absent
      with_items:
-      - "{{ revoke }}"
+      - "{{ pack3 }}"
 ```
 
 ```
-ansible-playbook user.yml
+ansible-playbook software.yml
 ```

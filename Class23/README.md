@@ -246,4 +246,19 @@ vim web.yml
 ```
 ansible-playbook web.yml
 ```
+```
+ansible all -m command -a "firewall-cmd --remove-service=http --permanent"
 
+ansible all -m command -a "firewall-cmd --reload"
+
+ansible all -m command -a "firewall-cmd --list-services"
+```
+- again execute the playbook 
+
+```
+ansible-playbook web.yml
+```
+
+```
+ansible all -m command -a "firewall-cmd --list-services"
+```

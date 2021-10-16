@@ -93,7 +93,7 @@ vim usermgmt/tasks/main.yml
 ---
 - name: User Creation progress
   debug:
-   msg: "all users has been created and Nominated users also has been removed from the servers"
+   msg: "All users will be created and added to the respective groups"
 ```
 
 - go to parent directory where you have ansible.cfg file is there.
@@ -150,7 +150,7 @@ ansible-playbook user.yml
 
 ```
 cd roles
-ansible-galaxy init package
+ansible-galaxy init urllist
 ```
 
 ```
@@ -158,29 +158,20 @@ vim package/vars/main.yml
 ```
 
 ```
-pack1:
-        - zip
-		- unzip
-		- httpd
-		- vsftpd
-		- xreader
-pack2:
-        - xmp
-		- xdotool
-		- x11vnc
-		- wt
-		- wol
-		- whois
+devurls:
+        - "http://cloudnloud.com/"}
+		- "http://youtube.com/"}
+		- "http://www.tcs.com/"}
+		- "http://www.infosys.com/"}
+		- "http://www.wipro.com/"}
 
-pack3:
-        - agda
-		- aime
-		- apper
-		- laszip
-		- uhd-tools
-		- uget
-		- uptime
-		- scorep
+app2urls:
+        - "http://www.irctc.com/"}
+		- "http://www.redbus.com/"}
+		- "http://www.emirates.com/"}
+		- "http://www.skyscanner.com/"}
+		- "http://www.redhat.com/"}
+		- "http://www.airfrance.com/"}
 ```
 
 - save the file
@@ -192,45 +183,47 @@ vim package/tasks/main.yml
 
 ```
 ---
-- name: package management is in progress
+- name: url check is in progress
   debug:
-   msg: "all Package maintanance has been completed."
+   msg: "all environment urls will be validated."
 ```
 
 - go to parent directory where you have ansible.cfg file is there.
 - create new playbook like below
 
 ```
-vim software.yml
+vim urlcheck.yml
 ```
 
 ```
 ---
-- name: Install and Remove softwares
+- name: create user and groups
   hosts: all
   roles:
-   - package
+   - urllist
   tasks:
-   - name: Install package set 1
-     yum:
-      name: "{{ item }}"
-      state: present
-     with_items:
-      - "{{ pack1 }}"
-   - name: Install package set 1
-     yum:
-      name: "{{ item }}"
-      state: present
-     with_items:
-      - "{{ pack2 }}"
-   - name: Remove package set 3
-     yum:
-      name: "{{ item }}"
-      state: absent
-     with_items:
-      - "{{ pack3 }}"
+   - name: check url is reachable or not
+     uri:
+      url: "{{ item }}"
+	 with_items:
+	  - "{{ devurls }}"
+   - name: print the is working
+     debug:
+      msg: "{{ item }} is working and reachble"
+	 with_items:
+	  - "{{ devurls }}"
+   - name: check url is reachable or not
+     uri:
+      url: "{{ item }}"
+	 with_items:
+	  - "{{ app2urls }}"
+   - name: print the is working
+     debug:
+      msg: "{{ item }} is working and reachble"
+	 with_items:
+	  - "{{ app2urls }}"
 ```
 
 ```
-ansible-playbook software.yml
+ansible-playbook urlcheck.yml
 ```

@@ -169,37 +169,6 @@ cat httpd.yml
 
 ## scenario 6: View the existing encrypted playbook
 
-- Create new playbook
-
-```
-vim unarchive.yml
-```
----
-- name: unarchive yml
-  hosts: node1,node2,node3
-  vars_files:
-   - crypt.yml
-  tasks:
-   - name: install unzip
-     yum:
-      name: unzip
-      state: latest
-   - name: create directory
-     file:
-      path: /var/www/html/vault
-      state: directory
-      mode: 0755
-   - name: download vault.zip
-     get_url:
-      url: http://192.168.243.11/ansible/vault.zip
-      dest: /var/www/html/vault/vault.zip
-      mode: 0644
-   - name: unzip 
-     command: unzip -o -P {{ password }} /var/www/html/vault/vault.zip
-     args:
-      chdir: /var/www/html/vault
-```
-
 - create the zip file with password - cnl12345
 
 ```
@@ -225,3 +194,35 @@ vim vaultpasswd
 ```
 password
 ```
+
+- Create new playbook
+
+```
+vim unarchive.yml
+```
+---
+- name: unarchive yml
+  hosts: node1,node2
+  vars_files:
+   - crypt.yml
+  tasks:
+   - name: install unzip
+     yum:
+      name: unzip
+      state: latest
+   - name: create directory
+     file:
+      path: /var/tmp/vault
+      state: directory
+      mode: 0644
+   - name: download vault.zip
+     get_url:
+      url: https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class25/vault.zip
+      dest: /var/tmp/vault/vault.zip
+      mode: 0644
+   - name: unzip 
+     command: unzip -o -P {{ password }} /var/tmp/vault/vault.zip
+     args:
+      chdir: /var/tmp/vault
+```
+

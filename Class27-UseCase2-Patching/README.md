@@ -70,8 +70,8 @@ wget https://github.com/cloudnloud/Ansible_Automation/blob/main/Class27-UseCase2
     register: reboot_started
     ignore_errors: true
 
-  - name: "This play will wait for 3 minutes for system to come up"
-    pause: minutes=3
+  - name: "This play will wait for 1 minutes for system to come up"
+    pause: minutes=1
     
     # Now we will run a local 'ansible -m ping' on this host until it returns.
     # This works with the existing ansible hosts inventory and so any custom ansible_ssh_hosts definitions are being used

@@ -31,7 +31,7 @@ vim agent.yml
     - block:
       - name: to print which OS is currently
         debug: msg="This is CENTOS enterprise os"
-        when: ansible_distribution == CentOS
+        when: ansible_distribution == "CentOS"
       - name: To check whether folder existis on server
         stat: path=/etc/opt/BESClient
         register: filestatus

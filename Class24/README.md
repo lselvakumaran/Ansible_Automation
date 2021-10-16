@@ -154,7 +154,7 @@ ansible-galaxy init urllist
 ```
 
 ```
-vim package/vars/main.yml
+vim urllist/vars/main.yml
 ```
 
 ```

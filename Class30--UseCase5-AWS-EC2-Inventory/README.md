@@ -52,8 +52,8 @@ vim ec2.yml
   tasks:
    - name: collect ec2 information
      ec2_instance_facts:
-      aws_access_key: AKIAWUWPB7NKFOP6WYJS
-      aws_secret_key: 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
+      aws_access_key: XXXXXXXXXXXXXXXXXXXX
+      aws_secret_key: XXXXXXXXXXXXXXXXXXXXXXXXXX
       region: "us-east-1"
       filters:
        instance-state-name: running

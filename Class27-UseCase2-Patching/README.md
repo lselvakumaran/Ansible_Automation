@@ -30,14 +30,14 @@ this above ping command should return with ping / pong green color.
 vim patch.yml
 ```
 ```
-wget 
+wget https://github.com/cloudnloud/Ansible_Automation/blob/main/Class27-UseCase2-Patching/appcheck.sh
 ```
 - create normal playbook
 
 ```
 ---
 - name: " This playbook is to apply patches to linux servers"
-  hosts: all
+  hosts: node1,node2
   serial: 2
   tasks:
   - name: install httpd
@@ -56,12 +56,10 @@ wget
     when: application_process_check.stdout == "process is running"
   - name: "Applying patches to the server"
     yum: name=kernel state=latest
-    when: application_process_check.stdout == "Process is not running.\r\n" and ansible_distribution == "CentOS" or ansibl
-e_distribution == "RedHat"
+    when: application_process_check.stdout == "Process is not running.\r\n" and ansible_distribution == "CentOS" or ansible_distribution == "RedHat"
     register: patch_update
   - name: "Check if reboot required"
-    shell: KERNEL_NEW=$(rpm -q --last kernel |head -1 | awk '{print $1}'|sed 's/kernel-//'); KERNEL_NOW=$(uname -r); if [[
- $KERNEL_NEW != $KERNEL_NOW ]]; then echo "reboot needed"; else echo "reboot not needed"; fi
+    shell: KERNEL_NEW=$(rpm -q --last kernel |head -1 | awk '{print $1}'|sed 's/kernel-//'); KERNEL_NOW=$(uname -r); if [[ $KERNEL_NEW != $KERNEL_NOW ]]; then echo "reboot needed"; else echo "reboot not needed"; fi
     ignore_errors: true
     register: reboot_status
   - name: "This play is to restart the system using above status check"

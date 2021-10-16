@@ -249,10 +249,12 @@ fact_caching_timeout = 7200
 - If you are executing a playbook on more than 5 hosts, **this means you will actually execute on a portions of 5 hosts in parallel**. This can easily become a bottleneck when working with tens, hundreds or thousands of hosts. 
 
 - Luckily this option could be manually controlled from your ansible.cfg file and looks like this: 
+```
 
 [defaults]
 forks = 50
 
+```
 
 - By adding the line above, you will increase the forks to 50. 
 

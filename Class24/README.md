@@ -178,7 +178,7 @@ app2urls:
 
 
 ```
-vim package/tasks/main.yml
+vim urllist/tasks/main.yml
 ```
 
 ```

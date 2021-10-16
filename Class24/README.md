@@ -197,7 +197,7 @@ vim urlcheck.yml
 
 ```
 ---
-- name: create user and groups
+- name: Check urls for applications
   hosts: all
   roles:
    - urllist
@@ -205,23 +205,23 @@ vim urlcheck.yml
    - name: check url is reachable or not
      uri:
       url: "{{ item }}"
-	 with_items:
-	  - "{{ devurls }}"
+     with_items:
+      - "{{ devurls }}"
    - name: print the is working
      debug:
       msg: "{{ item }} is working and reachble"
-	 with_items:
-	  - "{{ devurls }}"
+     with_items:
+       - "{{ devurls }}"
    - name: check url is reachable or not
      uri:
       url: "{{ item }}"
-	 with_items:
-	  - "{{ app2urls }}"
+     with_items:
+      - "{{ app2urls }}"
    - name: print the is working
      debug:
       msg: "{{ item }} is working and reachble"
-	 with_items:
-	  - "{{ app2urls }}"
+     with_items:
+      - "{{ app2urls }}"
 ```
 
 ```

@@ -215,19 +215,19 @@ vim software.yml
      yum:
       name: "{{ item }}"
       state: present
-     with_items:
+     loop:
       - "{{ pack1 }}"
    - name: Install package set 1
      yum:
       name: "{{ item }}"
       state: present
-     with_items:
+     loop:
       - "{{ pack2 }}"
    - name: Remove package set 3
      yum:
       name: "{{ item }}"
       state: absent
-     with_items:
+     loop:
       - "{{ pack3 }}"
 ```
 

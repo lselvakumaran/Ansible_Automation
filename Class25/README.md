@@ -197,8 +197,10 @@ password
 
 - Create new playbook
 
+
 ```
 vim unarchive.yml
+```
 ```
 ---
 - name: unarchive yml

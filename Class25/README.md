@@ -100,7 +100,7 @@ cat httpd.yml
 - Encrypt and create new playbook
 
 ```
-ansible-vault create httpd1.yaml
+ansible-vault create httpd1.yml
 ```
 
 ```

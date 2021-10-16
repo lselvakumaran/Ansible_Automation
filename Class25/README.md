@@ -132,7 +132,7 @@ cat httpd1.yml
 - Encrypt and create new playbook
 
 ```
-ansible-vault decrypt httpd1.yaml
+ansible-vault decrypt httpd1.yml
 ```
 
 - To execute the file.
@@ -152,7 +152,7 @@ cat httpd1.yml
 - Encrypt and create new playbook
 
 ```
-ansible-vault view httpd.yaml
+ansible-vault view httpd.yml
 ```
 
 - To execute the file.

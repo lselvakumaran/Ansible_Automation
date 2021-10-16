@@ -79,7 +79,7 @@ ansible-vault --help
 - Encrypt existing normal playbook
 
 ```
-ansible-vault encrypt httpd.yaml
+ansible-vault encrypt httpd.yml
 ```
 
 

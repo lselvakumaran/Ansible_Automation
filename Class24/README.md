@@ -159,19 +159,19 @@ vim urllist/vars/main.yml
 
 ```
 devurls:
-        - "http://cloudnloud.com/"}
-		- "http://youtube.com/"}
-		- "http://www.tcs.com/"}
-		- "http://www.infosys.com/"}
-		- "http://www.wipro.com/"}
+        - "http://cloudnloud.com/"
+        - "http://youtube.com/"
+        - "http://www.tcs.com/"
+        - "http://www.infosys.com/"
+        - "http://www.wipro.com/"
 
 app2urls:
-        - "http://www.irctc.com/"}
-		- "http://www.redbus.com/"}
-		- "http://www.emirates.com/"}
-		- "http://www.skyscanner.com/"}
-		- "http://www.redhat.com/"}
-		- "http://www.airfrance.com/"}
+        - "http://www.irctc.com/"
+        - "http://www.redbus.com/"
+        - "http://www.emirates.com/"
+        - "http://www.skyscanner.com/"
+        - "http://www.redhat.com/"
+        - "http://www.airfrance.com/"
 ```
 
 - save the file

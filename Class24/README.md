@@ -207,7 +207,7 @@ vim urlcheck.yml
       url: "{{ item }}"
      with_items:
       - "{{ devurls }}"
-   - name: print the is working
+   - name: print the {{ item }} is working
      debug:
       msg: "{{ item }} is working and reachble"
      with_items:
@@ -217,7 +217,7 @@ vim urlcheck.yml
       url: "{{ item }}"
      with_items:
       - "{{ app2urls }}"
-   - name: print the is working
+   - name: print the {{ item }} is working
      debug:
       msg: "{{ item }} is working and reachble"
      with_items:

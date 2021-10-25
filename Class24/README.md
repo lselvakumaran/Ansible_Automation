@@ -145,7 +145,7 @@ ansible-playbook user.yml
 ```
 
 
-## scenario 2: Bulk Patch installation & Bulk patch removal Using Role ?
+## scenario 2: Bulk URL checking ?
 
 
 ```

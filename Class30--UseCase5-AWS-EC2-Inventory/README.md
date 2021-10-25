@@ -36,7 +36,7 @@ aws configure
 
 
 
-## scenario 1: Create EC2 Instance using Playbook
+## scenario 1: Collect ec2 instances information using Playbook
 
 
 ```

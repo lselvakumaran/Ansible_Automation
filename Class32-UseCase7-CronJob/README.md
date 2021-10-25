@@ -68,7 +68,7 @@ vim cron.yml
     - name: Send emails about expiry dates
       cron:
         user: ansible
-		name: "Send expiry date emails (runs each day, 15 minutes after midnight)"
+	name: "Send expiry date emails (runs each day, 15 minutes after midnight)"
         minute: "15"
         hour: "0"
         job: "php path/to/console email-expiry-dates/send-email"  
@@ -105,7 +105,7 @@ vim cron.yml
     - name: Send emails about expiry dates
       cron:
         user: ansible
-		name: "Send expiry date emails (runs each day, 15 minutes after midnight in New York's time zone)"
+	name: "Send expiry date emails (runs each day, 15 minutes after midnight in New York's time zone)"
         minute: "15"
         hour: "5"
         job: "php path/to/console email-expiry-dates/send-email"
@@ -144,7 +144,7 @@ vim cron.yml
     - name: Old (Send emails about expiry dates)
       cron:
         user: ansible
-		name: "Send expiry date emails (runs each day, 15 minutes after midnight)"
+	name: "Send expiry date emails (runs each day, 15 minutes after midnight)"
         minute: "15"
         hour: "0"
         job: "php path/to/console email-expiry-dates/send-email"
@@ -152,7 +152,7 @@ vim cron.yml
     - name: Send emails about expiry dates
       cron:
         user: ansible
-		name: "Send expiry date emails (runs each day, 15 minutes after midnight in New York's time zone)"
+	name: "Send expiry date emails (runs each day, 15 minutes after midnight in New York's time zone)"
         minute: "15"
         hour: "5"
         job: "php path/to/console email-expiry-dates/send-email"

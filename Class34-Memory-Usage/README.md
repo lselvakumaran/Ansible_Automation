@@ -29,7 +29,10 @@ sudo yum install sysstat -y
 # Step 2: Crete a playbook to check the Memory Usage for 3 intervals (3 sec)
  
 ```
-vi memory-monitoring.yml
+wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class34-Memory-Usage/memory-monitoring.yml
+```
+```
+wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class34-Memory-Usage/Get-Memory-Utilization.sh
 ```
 
  
@@ -54,7 +57,7 @@ ansible-playbook memory-monitoring.yml --syntax-check
 # Step 5: Execute MEMORY utilization monitoring playbook and see the results
 
 ```
-ansible-playbook -e "HOSTS=all" memory-monitoring.yml
+ansible-playbook memory-monitoring.yml
 ```
 
 
@@ -64,13 +67,19 @@ ansible-playbook -e "HOSTS=all" memory-monitoring.yml
 - in node1
 
 ```
-cat <( </dev/zero head -c 585m) <(sleep 120) | tail
+cat <( </dev/zero head -c 650m) <(sleep 120) | tail
 ```
+
+```
+ansible-playbook memory-monitoring.yml
+```
+
+
 
 # Step 6: Send Ansible Email notification if MEMORY usage more than 90% (or) (MEMORY Usage >= 90 %)
 
 ```
-ansible-playbook -e "HOSTS=all" MEMORY-monitoring.yml --ask-vault-pass
+ansible-playbook  MEMORY-monitoring.yml
 ```
 
 

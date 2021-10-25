@@ -41,9 +41,9 @@ https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class31-Use
 
 
   IF 
-    - MEMORY Used percentage less than 90 (MEMORY Usage < 90 %)                 =====> Normal
+    - MEMORY Used percentage less than 70 (MEMORY Usage < 70 %)                 =====> Normal
   ELSE
-    - MEMORY Used percentage greater than or equal to 90 (MEMORY Usage >= 90 %) ====> Abnormal
+    - MEMORY Used percentage greater than or equal to 70 (MEMORY Usage >= 70 %) ====> Abnormal
 -------------------------------------------------------------------------------- 
 
 
@@ -62,7 +62,7 @@ ansible-playbook memory-monitoring.yml
 
 
 
-***For Testing Purpose stress" 585 Mb for 2 minutes***
+***For Testing Purpose stress" 650 Mb for 2 minutes***
 
 - in node1
 

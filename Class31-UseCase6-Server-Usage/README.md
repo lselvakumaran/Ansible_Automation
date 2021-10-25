@@ -29,7 +29,7 @@ sudo yum install sysstat -y
 # Step 2: Crete a playbook to check the Memory Usage for 3 intervals (3 sec)
  
 ```
-wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class34-Memory-Usage/memory-monitoring.yml
+https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class31-UseCase6-Server-Usage/memory-monitoring.yml
 ```
 ```
 wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class34-Memory-Usage/Get-Memory-Utilization.sh

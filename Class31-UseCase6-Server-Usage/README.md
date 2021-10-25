@@ -32,7 +32,7 @@ sudo yum install sysstat -y
 https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class31-UseCase6-Server-Usage/memory-monitoring.yml
 ```
 ```
-wget https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class34-Memory-Usage/Get-Memory-Utilization.sh
+https://raw.githubusercontent.com/cloudnloud/Ansible_Automation/main/Class31-UseCase6-Server-Usage/Get-Memory-Utilization.sh
 ```
 
  

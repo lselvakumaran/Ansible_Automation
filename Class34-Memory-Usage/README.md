@@ -83,6 +83,6 @@ ansible-playbook  MEMORY-monitoring.yml
 ```
 
 
-#Step 7: Check your Gmail Inbox.
+# Step 7: Check your Gmail Inbox.
 
-#Step 8: Download playbook for your Reference using description link
+# Step 8: Download playbook for your Reference using description link

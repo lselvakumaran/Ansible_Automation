@@ -201,6 +201,7 @@ in dependencies section remove []
 
 then add the below lines
 
+dependencies: 
  - { role: singleurl, url: "http://cloudnloud.com/"}
  - { role: singleurl, url: "http://youtube.com/"}
  - { role: singleurl, url: "http://www.tcs.com/"}

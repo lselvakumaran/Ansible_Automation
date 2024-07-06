@@ -190,7 +190,10 @@ vim /home/ansible/dev/singleurltesting.yml
 - go to meta folder and list all the urls which you want to monitor
 
 ```
+cd roles
+mkdir multiurl
 cd multiurl
+mkdir meta
 cd meta
 vim /home/ansible/dev/roles/multiurl/meta/main.yml 
 
@@ -215,6 +218,7 @@ Now go to tasks folder and enter what you want to test and print.
 
 ```
 cd multiurl
+mkdir tasks
 cd tasks
 vim /home/ansible/dev/roles/multiurl/tasks/main.yml 
 ---

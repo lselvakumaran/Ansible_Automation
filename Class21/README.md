@@ -152,7 +152,9 @@ url: http://www.google.com/
 Now go to tasks folder and enter what you want to test and print.
 
 ```
+mkdir singleurl
 cd singleurl
+mkdir tasks
 cd tasks
 vim roles/singleurl/tasks/main.yml 
 ---

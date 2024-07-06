@@ -201,10 +201,6 @@ mkdir meta
 cd meta
 vim /home/ansible/dev/roles/multiurl/meta/main.yml 
 
-in dependencies section remove []
-
-then add the below lines
-
 dependencies: 
  - { role: singleurl, url: "http://cloudnloud.com/"}
  - { role: singleurl, url: "http://youtube.com/"}
@@ -244,3 +240,4 @@ vim /home/ansible/dev/multiurltesting.yml
   roles:
    - multiurl
 ```
+ansible-playbook /home/ansible/dev/multiurltesting.yml

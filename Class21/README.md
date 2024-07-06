@@ -142,9 +142,11 @@ become_ask_pass=False
 - go to defaults folder and set the variable
 
 ```
+mkdir singleurl
 cd singleurl
+mkdir defaults
 cd defaults
-vim roles/singleurl/defaults/main.yml 
+vim /home/ansible/dev/roles/singleurl/defaults/main.yml 
 ---
 url: http://www.google.com/
 
@@ -152,11 +154,11 @@ url: http://www.google.com/
 Now go to tasks folder and enter what you want to test and print.
 
 ```
-mkdir singleurl
+
 cd singleurl
 mkdir tasks
 cd tasks
-vim roles/singleurl/tasks/main.yml 
+vi /home/ansible/dev/roles/singleurl/tasks/main.yml
 ---
 - name: check url is reachable or not
   uri:
